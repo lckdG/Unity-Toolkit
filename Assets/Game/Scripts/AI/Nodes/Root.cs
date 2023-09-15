@@ -12,7 +12,8 @@ namespace AI.Tree
 
         protected override State OnUpdate()
         {
-            return child.Update();
+            child.Update();
+            return State.EXECUTING;
         }
 
         public override Node Clone()
