@@ -1,5 +1,6 @@
 namespace AI.Tree
 {
+    // TODO: change this to repeat by time, or by secs instead
     public class Repeat : Decorator
     {
         protected override void OnStart() { }

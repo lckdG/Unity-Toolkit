@@ -5,6 +5,7 @@ using UnityEngine.AI;
 
 namespace AI.Tree
 {
+    // TODO: simplify & clean
     [CreateAssetMenu(menuName = "AI/Blackboard")]
     public class Blackboard : ScriptableObject
     {
