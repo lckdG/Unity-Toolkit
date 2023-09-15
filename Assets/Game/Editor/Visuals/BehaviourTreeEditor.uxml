@@ -1,0 +1,26 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <Style src="BehaviourTreeEditor.uss" />
+    <uie:Toolbar>
+        <uie:ToolbarMenu display-tooltip-when-elided="true" text="Assets" />
+    </uie:Toolbar>
+    <SplitView fixed-pane-initial-dimension="350" style="overflow: hidden;">
+        <ui:VisualElement name="left-panel" style="padding-right: 0; padding-left: 0;">
+            <SplitView orientation="Vertical" fixed-pane-initial-dimension="300" class="split-view" style="background-color: rgb(56, 56, 56);">
+                <ui:ScrollView show-horizontal-scroller="true">
+                    <ui:VisualElement name="inspector-container" class="inspector-view" style="background-color: rgb(56, 56, 56);">
+                        <ui:Label text="    Inspector" display-tooltip-when-elided="true" style="border-left-width: 0; border-right-width: 0; border-top-width: 0; border-bottom-width: 1px; border-top-left-radius: 0; border-bottom-left-radius: 0; border-top-right-radius: 0; border-bottom-right-radius: 0; -unity-slice-left: 0; -unity-slice-top: 0; -unity-slice-right: 0; -unity-slice-bottom: 0; border-bottom-color: rgb(196, 192, 193); border-top-color: rgb(196, 192, 193); border-right-color: rgb(196, 192, 193); border-left-color: rgb(196, 192, 193); padding-left: 0; padding-right: 0; margin-left: 0;" />
+                        <InspectorView focusable="false" name="node-inspector" class="inspector-view" style="margin-right: 0; margin-left: 0; margin-top: 0; padding-left: 10px; padding-right: 10px; padding-top: 5px; padding-bottom: 15px; margin-bottom: 0; flex-grow: 1;" />
+                    </ui:VisualElement>
+                </ui:ScrollView>
+                <ui:VisualElement name="blackboard-container" style="flex-shrink: 1; background-color: rgb(56, 56, 56);">
+                    <ui:Label text="Blackboard" display-tooltip-when-elided="true" style="padding-left: 5px; padding-top: 5px; border-bottom-width: 1px; border-bottom-color: rgba(196, 192, 193, 255);" />
+                    <InspectorView name="blackboard-inspector" style="padding-left: 10px; padding-right: 10px; padding-top: 5px; padding-bottom: 10px;" />
+                </ui:VisualElement>
+            </SplitView>
+        </ui:VisualElement>
+        <ui:VisualElement name="right-panel">
+            <ui:Label text="   Tree View" display-tooltip-when-elided="true" style="border-bottom-color: rgb(196, 192, 193); border-bottom-width: 1px;" />
+            <BehaviourTreeView focusable="true" style="flex-grow: 1;" />
+        </ui:VisualElement>
+    </SplitView>
+</ui:UXML>
