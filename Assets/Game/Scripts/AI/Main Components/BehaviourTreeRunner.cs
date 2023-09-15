@@ -17,6 +17,15 @@ namespace AI.Tree
             }
         }
 
+        void Start()
+        {
+            if ( cloneFrom != null )
+            {
+                tree = cloneFrom.Clone();
+                tree.Setup();
+            }
+        }
+
         public void CloneFromTree( BehaviourTree tree )
         {
             this.tree = tree.Clone();
