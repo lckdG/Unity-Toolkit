@@ -20,6 +20,7 @@ namespace BehaviorTreeAI
         public void CloneFromTree( BehaviourTree tree )
         {
             this.tree = tree.Clone();
+            this.tree.Setup();
         }
 
         public void SetBlackboardTarget( MonoBehaviour target )
@@ -40,14 +41,6 @@ namespace BehaviorTreeAI
             return tree.GetBlackboardData( key );
         }
 
-        public void SetupTree()
-        {
-            if ( tree )
-            {
-                tree.Setup();
-            }
-        }
-
         public void UpdateTree()
         {
             if ( tree != null )
@@ -56,14 +49,17 @@ namespace BehaviorTreeAI
             }
         }
 
-        internal BehaviourTree GetTree()
-        {
-            return tree;
-        }
-
         public void ResetTree()
         {
             tree.Reset();
         }
+
+#if UNITY_EDITOR
+        public BehaviourTree GetTree()
+        {
+            return tree;
+        }
+#endif
+
     }
 }

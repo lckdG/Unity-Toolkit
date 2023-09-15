@@ -1,29 +1,32 @@
 #if UNITY_EDITOR
 
-using System;
 using UnityEngine.UIElements;
 using UnityEditor;
 
-public class InspectorView : VisualElement
+namespace BehaviorTreeAI
 {
-    public new class UxmlFactory : UxmlFactory<InspectorView, VisualElement.UxmlTraits> { }
-
-    private Editor editor;
-    public InspectorView() {  }
-
-    internal void UpdateSelection( UnityEngine.Object view)
+    public class InspectorView : VisualElement
     {
-        Clear();
+        public new class UxmlFactory : UxmlFactory<InspectorView, VisualElement.UxmlTraits> { }
 
-        UnityEngine.Object.DestroyImmediate( editor );
-        editor = Editor.CreateEditor( view );
-        IMGUIContainer container = new IMGUIContainer( () => {
-            if ( editor.target )
-            {
-                editor.OnInspectorGUI();
-            }
-        } );
-        Add(container);
+        private Editor editor;
+        public InspectorView() {  }
+
+        internal void UpdateSelection( UnityEngine.Object view)
+        {
+            Clear();
+
+            UnityEngine.Object.DestroyImmediate( editor );
+            editor = Editor.CreateEditor( view );
+            IMGUIContainer container = new IMGUIContainer( () => {
+                if ( editor.target )
+                {
+                    editor.OnInspectorGUI();
+                }
+            } );
+            Add(container);
+        }
     }
 }
+
 #endif
