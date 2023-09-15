@@ -1,15 +1,14 @@
 #if UNITY_EDITOR
 
 using UnityEngine.UIElements;
-using UnityEditor;
 
-namespace BehaviorTreeAI
+namespace AI.Tree.Editor
 {
     public class InspectorView : VisualElement
     {
         public new class UxmlFactory : UxmlFactory<InspectorView, VisualElement.UxmlTraits> { }
 
-        private Editor editor;
+        private UnityEditor.Editor editor;
         public InspectorView() {  }
 
         internal void UpdateSelection( UnityEngine.Object view)
@@ -17,7 +16,7 @@ namespace BehaviorTreeAI
             Clear();
 
             UnityEngine.Object.DestroyImmediate( editor );
-            editor = Editor.CreateEditor( view );
+            editor = UnityEditor.Editor.CreateEditor( view );
             IMGUIContainer container = new IMGUIContainer( () => {
                 if ( editor.target )
                 {

@@ -8,7 +8,7 @@ using UnityEditor;
 using UnityEngine.UIElements;
 using UnityEditor.Experimental.GraphView;
 
-namespace BehaviorTreeAI
+namespace AI.Tree.Editor
 {
     public class BehaviourTreeView : GraphView
     {
@@ -32,7 +32,7 @@ namespace BehaviorTreeAI
             Undo.undoRedoPerformed += OnUndoRedo;
         }
 
-        private NodeView FindNodeView( BehaviorTreeAI.Node node )
+        private NodeView FindNodeView( Node node )
         {
             return GetNodeByGuid( node.guid ) as NodeView;
         }
@@ -61,8 +61,8 @@ namespace BehaviorTreeAI
 
                 if ( parentView.subOutput != null ) // Simple parallel node only
                 {
-                    BehaviorTreeAI.Node mainAction = children[0];
-                    BehaviorTreeAI.Node subAction = children[1]; 
+                    Node mainAction = children[0];
+                    Node subAction = children[1]; 
 
                     NodeView mainActionView = FindNodeView( mainAction );
                     Edge mainEdge = parentView.output.ConnectTo( mainActionView.input );
@@ -85,7 +85,7 @@ namespace BehaviorTreeAI
             } );
         }
 
-        private void CreateNodeView( BehaviorTreeAI.Node node )
+        private void CreateNodeView( Node node )
         {
             NodeView nodeView = new NodeView( node );
             nodeView.OnNodeSelected = OnNodeSelected;
@@ -95,7 +95,7 @@ namespace BehaviorTreeAI
         public override void BuildContextualMenu(ContextualMenuPopulateEvent evt)
         {
             {
-                var types = TypeCache.GetTypesDerivedFrom<BehaviorTreeAI.Action>();
+                var types = TypeCache.GetTypesDerivedFrom<Action>();
                 foreach( var type in types )
                 {
                     evt.menu.AppendAction($"[{type.BaseType.Name}] {type.Name}", ( _ ) => CreateNode( type ) );
@@ -122,7 +122,7 @@ namespace BehaviorTreeAI
 
         private void CreateNode( System.Type type )
         {
-            BehaviorTreeAI.Node node = tree.CreateNode( type );
+            Node node = tree.CreateNode( type );
             CreateNodeView( node );
         }
 

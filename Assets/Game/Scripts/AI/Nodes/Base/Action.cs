@@ -1,4 +1,4 @@
-namespace BehaviorTreeAI
+namespace AI.Tree
 {
     public abstract class Action : Node, IVisitee
     {

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace BehaviorTreeAI
+namespace AI.Tree
 {
     public abstract class Node : ScriptableObject
     {

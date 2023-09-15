@@ -1,8 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-namespace BehaviorTreeAI
+namespace AI.Tree
 {
     public class ResetStateVisitor : INodeVisitor
     {

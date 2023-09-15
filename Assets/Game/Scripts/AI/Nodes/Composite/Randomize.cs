@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-namespace BehaviorTreeAI
+namespace AI.Tree
 {
     public class Randomize : Composite
     {

@@ -2,7 +2,7 @@
 
 using UnityEngine.UIElements;
 
-namespace BehaviorTreeAI
+namespace AI.Tree.Editor
 {
     public class SplitView : TwoPaneSplitView
     {

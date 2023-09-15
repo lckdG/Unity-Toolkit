@@ -5,7 +5,7 @@ using UnityEngine.AI;
 
 using Random = UnityEngine.Random;
 
-namespace BehaviorTreeAI
+namespace AI.Tree
 {
     [CreateAssetMenu(menuName = "AI/Blackboard")]
     public class Blackboard : ScriptableObject

@@ -1,4 +1,4 @@
-namespace BehaviorTreeAI
+namespace AI.Tree
 {
     public interface IVisitee
     {

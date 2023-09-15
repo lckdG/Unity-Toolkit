@@ -7,19 +7,19 @@ using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine.UIElements;
 
-namespace BehaviorTreeAI
+namespace AI.Tree.Editor
 {
     public class NodeView : UnityEditor.Experimental.GraphView.Node
     {
 
         public Action<NodeView> OnNodeSelected;
-        public BehaviorTreeAI.Node node;
+        public Node node;
 
         public Port input;
         public Port output;
         public Port subOutput;
 
-        public NodeView( BehaviorTreeAI.Node node ) : base(BehaviourTreeEditor.editorPath + "NodeView.uxml")
+        public NodeView( Node node ) : base(BehaviourTreeEditor.editorPath + "NodeView.uxml")
         {
             this.node = node;
             this.title = node.name;
@@ -36,7 +36,7 @@ namespace BehaviorTreeAI
 
         private void SetUpClass()
         {
-            if ( node is BehaviorTreeAI.Action )
+            if ( node is Action )
             {
                 AddToClassList("action");
             }
@@ -57,7 +57,7 @@ namespace BehaviorTreeAI
 
         private void CreateInputPorts()
         {
-            if ( node is BehaviorTreeAI.Action )
+            if ( node is Action )
             {
                 input = InstantiatePort( Orientation.Vertical, Direction.Input, Port.Capacity.Single, typeof(bool) );
             }
@@ -82,7 +82,7 @@ namespace BehaviorTreeAI
 
         private void CreateOutputPorts()
         {
-            if ( node is BehaviorTreeAI.Action ) { }
+            if ( node is Action ) { }
             else if ( node is SimpleParallel )
             {
                 output = InstantiatePort( Orientation.Vertical, Direction.Output, Port.Capacity.Single, typeof(bool) );
@@ -143,7 +143,7 @@ namespace BehaviorTreeAI
             }
         }
 
-        private int SortByHorizontalPosition( BehaviorTreeAI.Node left, BehaviorTreeAI.Node right )
+        private int SortByHorizontalPosition( Node left, Node right )
         {
             return left.position.x < right.position.x ? -1 : 1;
         }

@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEditor.Callbacks;
 
-namespace BehaviorTreeAI
+namespace AI.Tree.Editor
 {
     public class BehaviourTreeEditor : EditorWindow
     {

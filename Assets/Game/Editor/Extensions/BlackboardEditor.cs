@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 
 using UnityEditor;
-using BehaviorTreeAI;
+using AI;
 
 [CustomEditor(typeof(Blackboard), true)]
 public class BlackboardEditor : Editor

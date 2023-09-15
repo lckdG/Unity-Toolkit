@@ -1,5 +1,4 @@
-using System;
-namespace BehaviorTreeAI
+namespace AI.Tree
 {
     public static class BehaviourConstants
     {

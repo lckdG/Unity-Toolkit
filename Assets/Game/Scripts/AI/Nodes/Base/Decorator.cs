@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace BehaviorTreeAI
+namespace AI.Tree
 {
     public abstract class Decorator : Node, IVisitee
     {
