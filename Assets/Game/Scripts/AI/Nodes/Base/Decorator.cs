@@ -10,7 +10,7 @@ namespace AI.Tree
         {
             visitor.Visit( this );
 
-            IVisitee visitee = (child as IVisitee);
+            IVisitee visitee = child as IVisitee;
             if ( visitee != null ) visitee.Accept( visitor );
         }
 

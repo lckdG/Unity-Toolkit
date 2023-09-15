@@ -13,7 +13,7 @@ namespace AI.Tree
 
             foreach( Node child in children )
             {
-                IVisitee visitee = (child as IVisitee);
+                IVisitee visitee = child as IVisitee;
                 if ( visitee != null )
                 {
                     visitee.Accept( visitor );
