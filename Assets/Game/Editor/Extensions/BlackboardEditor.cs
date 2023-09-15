@@ -1,11 +1,9 @@
 #if UNITY_EDITOR
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 using UnityEditor;
-using AI;
+using AI.Tree;
 
 [CustomEditor(typeof(Blackboard), true)]
 public class BlackboardEditor : Editor

@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-using Random = UnityEngine.Random;
-
 namespace AI.Tree
 {
     [CreateAssetMenu(menuName = "AI/Blackboard")]
