@@ -64,12 +64,12 @@ namespace AI.Tree.Editor
             VisualElement root = rootVisualElement;
 
             // Import UXML
-            var visualTree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(editorPath + "BehaviourTreeEditor.uxml");
+            var visualTree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(editorPath + "Visuals\\BehaviourTreeEditor.uxml");
             visualTree.CloneTree(root);
 
             // A stylesheet can be added to a VisualElement.
             // The style will be applied to the VisualElement and all of its children.
-            var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(editorPath + "BehaviourTreeEditor.uss");
+            var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(editorPath + "Visuals\\BehaviourTreeEditor.uss");
             root.styleSheets.Add(styleSheet);
 
             treeView = root.Q<BehaviourTreeView>();
