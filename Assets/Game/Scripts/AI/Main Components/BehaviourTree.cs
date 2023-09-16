@@ -17,6 +17,22 @@ namespace AI.Tree
         public Blackboard blackboardRef;
         private Blackboard blackboard;
 
+        public BehaviourTree Clone()
+        {
+            BehaviourTree tree = Instantiate( this );
+            tree.root = this.root.Clone();
+            tree.nodes = new List<Node>();
+
+            if (blackboardRef != null)
+            {
+                tree.blackboard = blackboardRef.Clone();
+            }
+
+            Traverse( tree.root, n => tree.nodes.Add( n ) );
+
+            return tree;
+        }
+
         public void Setup()
         {
             blackboard.Setup();
@@ -38,6 +54,44 @@ namespace AI.Tree
                 var children = GetChildren( node );
                 children.ForEach( child => Traverse( child, visitor ) );
             }
+        }
+
+        public List<Node> GetChildren( Node parent )
+        {
+            List<Node> children = new List<Node>();
+
+            Root root = parent as Root;
+            if ( root && root.child )
+            {
+                children.Add( root.child );
+            }
+
+            Decorator decorator = parent as Decorator;
+            if ( decorator && decorator.child != null)
+            {
+                children.Add( decorator.child );
+            }
+
+            Composite composite = parent as Composite;
+            if ( composite )
+            {
+                return composite.children;
+            }
+
+            return children;
+        }
+
+    
+        public bool InSameCondition( BlackboardKeyMapping mapping )
+        {
+            return blackboard.CompareKeyMapping( mapping );
+        }
+
+        public void Reset()
+        {
+            if ( root == null ) return;
+            ResetStateVisitor resetVisitor = new ResetStateVisitor();
+            (root as Root).Accept( resetVisitor );
         }
 
         public void SetBlackboardTarget( MonoBehaviour target )
@@ -153,58 +207,5 @@ namespace AI.Tree
             }
         }
 #endif
-
-        public List<Node> GetChildren( Node parent )
-        {
-            List<Node> children = new List<Node>();
-
-            Root root = parent as Root;
-            if ( root && root.child )
-            {
-                children.Add( root.child );
-            }
-
-            Decorator decorator = parent as Decorator;
-            if ( decorator && decorator.child != null)
-            {
-                children.Add( decorator.child );
-            }
-
-            Composite composite = parent as Composite;
-            if ( composite )
-            {
-                return composite.children;
-            }
-
-            return children;
-        }
-
-        public BehaviourTree Clone()
-        {
-            BehaviourTree tree = Instantiate( this );
-            tree.root = this.root.Clone();
-            tree.nodes = new List<Node>();
-
-            if (blackboardRef != null)
-            {
-                tree.blackboard = blackboardRef.Clone();
-            }
-
-            Traverse( tree.root, n => tree.nodes.Add( n ) );
-
-            return tree;
-        }
-    
-        public bool InSameCondition( BlackboardKeyMapping mapping )
-        {
-            return blackboard.CompareKeyMapping( mapping );
-        }
-
-        public void Reset()
-        {
-            if ( root == null ) return;
-            ResetStateVisitor resetVisitor = new ResetStateVisitor();
-            (root as Root).Accept( resetVisitor );
-        }
     }
 }
