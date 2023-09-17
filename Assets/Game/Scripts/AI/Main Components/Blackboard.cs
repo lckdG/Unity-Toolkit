@@ -15,10 +15,7 @@ namespace AI.Tree
         {
             if ( !HasKey( key ) )
             {
-                BlackboardKeyMapping bkm = new BlackboardKeyMapping( type, key );
-                bkm.SetData( value );
-
-                context.Add( bkm );
+                AddData( type, key, value );
             }
             else
             {
@@ -90,29 +87,8 @@ namespace AI.Tree
 
         public List<BlackboardKeyMapping> GetContext() => context;
 
-        public void Setup()
-        {
-            NavMeshAgent targetAgent = target.GetComponent<NavMeshAgent>();
-
-            foreach ( BlackboardKeyMapping c in context )
-            {
-                if ( c.type == BlackboardObjectType.NavMeshAgent )
-                {
-                    c.SetData( targetAgent );
-                }
-            }
-        }
-
         public void SetTarget( MonoBehaviour target ) => this.target = target;
         public MonoBehaviour GetTarget() => this.target;
-
-        public void Update()
-        {
-            foreach ( BlackboardKeyMapping c in context )
-            {
-                c.Update();
-            }
-        }
     
         public bool CompareKeyMapping( BlackboardKeyMapping b )
         {
@@ -173,10 +149,7 @@ namespace AI.Tree
         private static bool IsBoolType( BlackboardKeyMapping mapping )
         {
             BlackboardObjectType type = mapping.type;
-
-            return     type == BlackboardObjectType.Bool 
-                    || type == BlackboardObjectType.True
-                    || type == BlackboardObjectType.False;
+            return type == BlackboardObjectType.Bool;
         }
 
         public BlackboardKeyMapping( BlackboardObjectType type, string keyString )
@@ -243,8 +216,6 @@ namespace AI.Tree
                 case BlackboardObjectType.String:
                 return testObj is string;
 
-                case BlackboardObjectType.True:
-                case BlackboardObjectType.False:
                 case BlackboardObjectType.Bool:
                 return testObj is bool;
 
@@ -274,22 +245,6 @@ namespace AI.Tree
             clone.objRef = objRef;
 
             return clone;
-        }
-    
-        public void Update()
-        {
-            if ( type == BlackboardObjectType.Float )
-            {
-                if ( boolValue && floatValue > 0f )
-                {
-                    floatValue -= Time.deltaTime;
-                    if ( floatValue <= 0f )
-                    {
-                        floatValue = 0f;
-                        boolValue = false; // Only decrease float value once
-                    }
-                }
-            }
         }
     }
 }

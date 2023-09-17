@@ -25,8 +25,6 @@ namespace AI.Tree
         Int,
         String,
         Bool,
-        True,
-        False,
         Vector2,
         Vector3,
         Object,

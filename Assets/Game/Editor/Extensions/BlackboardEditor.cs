@@ -151,14 +151,6 @@ public class BlackboardEditor : Editor
                 break;
             }
 
-            case (int)BlackboardObjectType.True:                    
-            case (int)BlackboardObjectType.False:
-            {
-                var boolVal = element.FindPropertyRelative("boolValue");
-                boolVal.boolValue = typeIndex == (int)BlackboardObjectType.True;
-                break;
-            }
-
             case (int)BlackboardObjectType.Bool:
             {
                 var boolVal_ = element.FindPropertyRelative("boolValue");
