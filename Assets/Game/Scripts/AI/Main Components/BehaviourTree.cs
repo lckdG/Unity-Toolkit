@@ -87,7 +87,7 @@ namespace AI.Tree
             return blackboard.CompareKeyMapping( mapping );
         }
 
-        public void Reset()
+        public void ResetState()
         {
             if ( root == null ) return;
             ResetStateVisitor resetVisitor = new ResetStateVisitor();
@@ -121,6 +121,40 @@ namespace AI.Tree
         }
 
 #if UNITY_EDITOR
+        void Awake()
+        {
+            if ( AssetDatabase.IsAssetImportWorkerProcess() ) return;
+            UpdateBlackboard( );
+        }
+
+        void UpdateBlackboard( )
+        {
+            string assetPath = AssetDatabase.GetAssetPath( this );
+            if ( string.IsNullOrEmpty( assetPath ) ) return;
+
+            string parentFolder = assetPath.Substring( 0, assetPath.LastIndexOf( "/" ) );
+            string blackboardName = $"{name}_Blackboard.asset";
+
+            if ( blackboardRef == null )
+            {
+                blackboardRef = CreateInstance<Blackboard>();
+
+                string blackboardPath = parentFolder + $"/{blackboardName}";
+
+                AssetDatabase.CreateAsset( blackboardRef, blackboardPath );
+                AssetDatabase.ForceReserializeAssets( new string[] { assetPath } );
+            }
+            else if ( blackboardRef.name.IndexOf( blackboardName ) == -1 )
+            {
+                string oldBlackboardPath = parentFolder + "/" + blackboardRef.name + ".asset";
+                string newName = blackboardName.Replace( ".asset", "" );
+
+                AssetDatabase.RenameAsset( oldBlackboardPath, newName );
+                AssetDatabase.Refresh();
+            }
+        }
+
+
         public Node CreateNode( Type type )
         {
             Node node = CreateInstance( type ) as Node;

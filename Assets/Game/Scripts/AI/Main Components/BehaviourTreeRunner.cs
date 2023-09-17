@@ -59,7 +59,7 @@ namespace AI.Tree
 
         public void ResetTree()
         {
-            tree.Reset();
+            tree.ResetState();
         }
 
 #if UNITY_EDITOR
