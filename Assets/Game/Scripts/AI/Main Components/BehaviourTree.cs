@@ -128,8 +128,10 @@ namespace AI.Tree
 #region Blackboard Handling
         void Awake()
         {
+            if ( AssetDatabase.IsAssetImportWorkerProcess() ) return;
+
             string assetPath = AssetDatabase.GetAssetPath( this );
-            if ( AssetDatabase.IsAssetImportWorkerProcess() || string.IsNullOrEmpty( assetPath ) )
+            if ( string.IsNullOrEmpty( assetPath ) )
             {
                 BehaviorTreeEditorUtility.RegisterAssetPostprocessCallback( OnAssetPostProcessed );
                 return;
