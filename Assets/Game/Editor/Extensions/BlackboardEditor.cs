@@ -16,7 +16,7 @@ public class BlackboardEditor : Editor
         Blackboard blackboard = target as Blackboard;
         serializedObject.Update();
 
-        SerializedProperty context = serializedObject.FindProperty("context");
+        SerializedProperty context = serializedObject.FindProperty("keyMappingList");
         
         if ( !foldoutInited )
         {
