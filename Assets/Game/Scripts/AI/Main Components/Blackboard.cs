@@ -49,33 +49,6 @@ namespace AI.Tree
 
 #endregion
 
-#region Getters
-        private BlackboardKeyMapping GetData( string key )
-        {
-            if ( context.TryGetValue( key, out var keyMapIndex ) )
-            {
-                return keyMapIndex;
-            }
-
-            return null;
-        }
-
-        public object GetObjectData( string key )
-        {
-            context.TryGetValue( key, out var keyMapIndex );
-            if ( keyMapIndex != null && keyMapIndex.type == BlackboardObjectType.Object )
-            {
-                return keyMapIndex;
-            }
-
-            return null;
-        }
-
-        public NavMeshAgent GetNavMeshAgent() => agent;
-        public MonoBehaviour GetTarget() => target;
-
-#endregion
-
         public bool ClearKey( string key )
         {
             if ( context.ContainsKey( key ) )
