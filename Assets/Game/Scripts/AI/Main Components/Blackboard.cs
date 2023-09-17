@@ -72,43 +72,6 @@ namespace AI.Tree
             return null;
         }
 
-        public void LogKey( string key )
-        {
-            if ( context.TryGetValue( key, out var keyMapIndex ) )
-            {
-                switch ( keyMapIndex.type )
-                {
-                    case BlackboardObjectType.Float:
-                        Debug.Log( $"{key} - {keyMapIndex.floatValue}" );
-                        break;
-                    
-                    case BlackboardObjectType.Int:
-                        Debug.Log( $"{key} - {keyMapIndex.intValue}" );
-                        break;
-
-                    case BlackboardObjectType.String:
-                        Debug.Log( $"{key} - {keyMapIndex.stringValue}" );
-                        break;
-
-                    case BlackboardObjectType.Bool:
-                        Debug.Log( $"{key} - {keyMapIndex.boolValue}" );
-                        break;
-
-                    case BlackboardObjectType.Vector2:
-                        Debug.Log( $"{key} - {keyMapIndex.vector2}" );
-                        break;
-
-                    case BlackboardObjectType.Vector3:
-                        Debug.Log( $"{key} - {keyMapIndex.vector3}" );
-                        break;
-
-                    case BlackboardObjectType.Object:
-                        Debug.Log( $"{key} - {keyMapIndex.objRef}" );
-                        break;
-                }
-            }
-        }
-
         public NavMeshAgent GetNavMeshAgent() => agent;
         public MonoBehaviour GetTarget() => target;
 
@@ -154,6 +117,45 @@ namespace AI.Tree
 
             return cloned;
         }
+
+#region Debug
+        public void LogKey( string key )
+        {
+            if ( context.TryGetValue( key, out var keyMapIndex ) )
+            {
+                switch ( keyMapIndex.type )
+                {
+                    case BlackboardObjectType.Float:
+                        Debug.Log( $"{key} - {keyMapIndex.floatValue}" );
+                        break;
+                    
+                    case BlackboardObjectType.Int:
+                        Debug.Log( $"{key} - {keyMapIndex.intValue}" );
+                        break;
+
+                    case BlackboardObjectType.String:
+                        Debug.Log( $"{key} - {keyMapIndex.stringValue}" );
+                        break;
+
+                    case BlackboardObjectType.Bool:
+                        Debug.Log( $"{key} - {keyMapIndex.boolValue}" );
+                        break;
+
+                    case BlackboardObjectType.Vector2:
+                        Debug.Log( $"{key} - {keyMapIndex.vector2}" );
+                        break;
+
+                    case BlackboardObjectType.Vector3:
+                        Debug.Log( $"{key} - {keyMapIndex.vector3}" );
+                        break;
+
+                    case BlackboardObjectType.Object:
+                        Debug.Log( $"{key} - {keyMapIndex.objRef}" );
+                        break;
+                }
+            }
+        }
+#endregion
     }
 
     [System.Serializable]
