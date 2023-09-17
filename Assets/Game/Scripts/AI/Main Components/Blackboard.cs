@@ -5,7 +5,6 @@ using UnityEngine.AI;
 
 namespace AI.Tree
 {
-    // TODO: simplify & clean
     public partial class Blackboard : ScriptableObject
     {
         protected MonoBehaviour target = null;

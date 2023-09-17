@@ -2,7 +2,6 @@ using UnityEngine;
 
 namespace AI.Tree
 {
-    // TODO: less exposure on blackboards
     public class BehaviourTreeRunner : MonoBehaviour
     {
         [SerializeField] protected BehaviourTree cloneFrom;
