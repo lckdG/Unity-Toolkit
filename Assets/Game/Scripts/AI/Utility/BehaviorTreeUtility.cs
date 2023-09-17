@@ -1,9 +1,9 @@
 using UnityEngine;
 using UnityEngine.AI;
 
-namespace AI
+namespace AI.Tree
 {
-    public static class AIUtils
+    public static class BehaviorTreeUtility
     {
         public static Vector3 GetNavMeshPosition( Transform transform , Vector3 worldPosition, float maxDistance, int area )
         {
@@ -19,4 +19,3 @@ namespace AI
         }
     }
 }
-
