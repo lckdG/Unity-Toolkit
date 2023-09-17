@@ -39,18 +39,17 @@ namespace AI.Tree
 
         public void Setup()
         {
-            blackboard.Setup();
             BindBlackboard();
         }
 
-        public void BindBlackboard()
+        private void BindBlackboard()
         {
             Traverse( root, ( n ) => {
                 n.SetBlackboard ( blackboard );
             });
         }
 
-        public void Traverse( Node node, System.Action<Node> visitor )
+        public void Traverse( Node node, Action<Node> visitor )
         {
             if ( node )
             {
@@ -85,12 +84,6 @@ namespace AI.Tree
             return children;
         }
 
-    
-        public bool InSameCondition( BlackboardKeyMapping mapping )
-        {
-            return blackboard.CompareKeyMapping( mapping );
-        }
-
         public void ResetState()
         {
             if ( root == null ) return;
@@ -108,14 +101,8 @@ namespace AI.Tree
             blackboard.SetOrAddData( type, key, data );
         }
 
-        public BlackboardKeyMapping GetBlackboardData( string key )
-        {
-            return blackboard.GetData( key );
-        }
-
         public State Update()
         {
-            blackboard.Update();
             if ( root.state == State.EXECUTING )
             {
                 treeState = root.Update();

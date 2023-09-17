@@ -2,12 +2,12 @@ using UnityEngine;
 
 namespace AI.Tree
 {
-    // TODO: less exposure on blackboards
     public class BehaviourTreeRunner : MonoBehaviour
     {
         [SerializeField] protected BehaviourTree cloneFrom;
         private BehaviourTree tree;
 
+#region Tree Setups
         void Awake()
         {
             if ( cloneFrom != null )
@@ -38,17 +38,9 @@ namespace AI.Tree
                 tree.SetBlackboardTarget( target );
             }
         }
+#endregion
 
-        public void SetBlackboardData( BlackboardObjectType type, string key, object data )
-        {
-            tree?.SetBlackBoardData( type, key, data );
-        }
-
-        public BlackboardKeyMapping GetBlackboardData( string key )
-        {
-            return tree.GetBlackboardData( key );
-        }
-
+#region  Tree Manipulations
         public void UpdateTree()
         {
             if ( tree != null )
@@ -57,10 +49,16 @@ namespace AI.Tree
             }
         }
 
+        public void SetBlackboardData( BlackboardObjectType type, string key, object data )
+        {
+            tree?.SetBlackBoardData( type, key, data );
+        }
+
         public void ResetTree()
         {
             tree.ResetState();
         }
+#endregion
 
 #if UNITY_EDITOR
         public BehaviourTree GetTree()

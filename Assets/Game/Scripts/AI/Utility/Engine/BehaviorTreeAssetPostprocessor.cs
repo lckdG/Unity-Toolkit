@@ -1,4 +1,4 @@
-using UnityEngine;
+#if UNITY_EDITOR
 using UnityEditor;
 
 namespace AI.Tree.Editor
@@ -11,4 +11,4 @@ namespace AI.Tree.Editor
         }
     }
 }
-
+#endif

@@ -1,24 +1,23 @@
 using System.Collections.Generic;
-
+using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 
 namespace AI.Tree
 {
-    // TODO: simplify & clean
-    public class Blackboard : ScriptableObject
+    public partial class Blackboard : ScriptableObject
     {
         protected MonoBehaviour target = null;
-        [SerializeField] private List<BlackboardKeyMapping> context = new List<BlackboardKeyMapping>();
+        [SerializeField] private NavMeshAgent agent;
+        [SerializeField] private List<BlackboardKeyMapping> keyMappingList;
+        private Dictionary<string, BlackboardKeyMapping> context = new();
 
+#region Setters
         public void SetOrAddData( BlackboardObjectType type, string key, object value )
         {
             if ( !HasKey( key ) )
             {
-                BlackboardKeyMapping bkm = new BlackboardKeyMapping( type, key );
-                bkm.SetData( value );
-
-                context.Add( bkm );
+                AddData( type, key, value );
             }
             else
             {
@@ -33,95 +32,102 @@ namespace AI.Tree
                 BlackboardKeyMapping bkm = new BlackboardKeyMapping( type, key );
                 bkm.SetData( value );
 
-                context.Add( bkm );
+                context.Add( key, bkm );
             }
         }
 
         public void SetData( string key, object value )
         {
-            BlackboardKeyMapping keyMapIndex = context.Find( x => x.keyString == key );
-            if ( keyMapIndex != null )
+            if ( context.TryGetValue( key, out var keyMapIndex ) )
             {
                 keyMapIndex.SetData( value );
             }
         }
 
-        public BlackboardKeyMapping GetData( string key )
-        {
-            BlackboardKeyMapping keyMapIndex = context.Find( x => x.keyString == key );
-            if ( keyMapIndex != null )
-            {
-                return keyMapIndex;
-            }
+        public void SetNavMeshAgent( NavMeshAgent agent ) => this.agent = agent;
+        public void SetTarget( MonoBehaviour target ) => this.target = target;
 
-            return null;
-        }
+#endregion
 
         public bool ClearKey( string key )
         {
-            BlackboardKeyMapping keyMapIndex = context.Find( x => x.keyString == key );
-            if ( keyMapIndex != null )
+            if ( context.ContainsKey( key ) )
             {
-                context.Remove( keyMapIndex );
+                context.Remove( key );
                 return true;
             }
-            
-            return false;
+
+            return false;           
         }
 
         public bool HasKey( string key )
         {
-            BlackboardKeyMapping desiredKeyMap = context.Find( keyMap => keyMap.keyString == key );
-            return desiredKeyMap != null;
+            return context.ContainsKey( key );
         }
 
         public Blackboard Clone()
         {
+            void CloneFrom( Blackboard blackboard, List<BlackboardKeyMapping> list )
+            {
+                foreach( BlackboardKeyMapping keyMap in list )
+                {
+                    BlackboardKeyMapping clone = keyMap.Clone();
+                    blackboard.context.Add( clone.keyString, clone );
+                }
+            }
+
             Blackboard cloned = CreateInstance( typeof(Blackboard) ) as Blackboard;
 
-            foreach( BlackboardKeyMapping keyMap in this.context )
+            if ( context.Count != 0 )
             {
-                BlackboardKeyMapping clone = keyMap.Clone();
-                cloned.context.Add( clone );
+                CloneFrom( cloned, context.Values.ToList() );
+            }
+            else
+            {
+                CloneFrom( cloned, keyMappingList );
             }
 
             return cloned;
         }
 
-        public List<BlackboardKeyMapping> GetContext() => context;
-
-        public void Setup()
+#region Debug
+        public void LogKey( string key )
         {
-            NavMeshAgent targetAgent = target.GetComponent<NavMeshAgent>();
-
-            foreach ( BlackboardKeyMapping c in context )
+            if ( context.TryGetValue( key, out var keyMapIndex ) )
             {
-                if ( c.type == BlackboardObjectType.NavMeshAgent )
+                switch ( keyMapIndex.type )
                 {
-                    c.SetData( targetAgent );
+                    case BlackboardObjectType.Float:
+                        Debug.Log( $"{key} - {keyMapIndex.floatValue}" );
+                        break;
+                    
+                    case BlackboardObjectType.Int:
+                        Debug.Log( $"{key} - {keyMapIndex.intValue}" );
+                        break;
+
+                    case BlackboardObjectType.String:
+                        Debug.Log( $"{key} - {keyMapIndex.stringValue}" );
+                        break;
+
+                    case BlackboardObjectType.Bool:
+                        Debug.Log( $"{key} - {keyMapIndex.boolValue}" );
+                        break;
+
+                    case BlackboardObjectType.Vector2:
+                        Debug.Log( $"{key} - {keyMapIndex.vector2}" );
+                        break;
+
+                    case BlackboardObjectType.Vector3:
+                        Debug.Log( $"{key} - {keyMapIndex.vector3}" );
+                        break;
+
+                    case BlackboardObjectType.Object:
+                        Debug.Log( $"{key} - {keyMapIndex.objRef}" );
+                        break;
                 }
             }
         }
-
-        public void SetTarget( MonoBehaviour target ) => this.target = target;
-        public MonoBehaviour GetTarget() => this.target;
-
-        public void Update()
-        {
-            foreach ( BlackboardKeyMapping c in context )
-            {
-                c.Update();
-            }
-        }
-    
-        public bool CompareKeyMapping( BlackboardKeyMapping b )
-        {
-            string key = b.keyString;
-            if ( !HasKey( key ) ) return false;
-
-            BlackboardKeyMapping keyMapping = GetData( key );
-            return BlackboardKeyMapping.Compare( keyMapping, b );
-        }
+#endregion
     }
 
     [System.Serializable]
@@ -137,48 +143,6 @@ namespace AI.Tree
         public bool boolValue;
         public object objRef;
 
-        public static bool Compare( BlackboardKeyMapping a, BlackboardKeyMapping b )
-        {
-            if ( IsBoolType( a ) && IsBoolType( b ) )
-            {
-                return a.boolValue == b.boolValue;
-            }
-
-            if ( a.type != b.type ) return false;
-
-            switch( a.type )
-            {
-                case BlackboardObjectType.Float:
-                    return a.floatValue == b.floatValue;
-                
-                case BlackboardObjectType.Int:
-                    return a.intValue == b.intValue;
-
-                case BlackboardObjectType.String:
-                    return a.stringValue == b.stringValue;
-
-                case BlackboardObjectType.Vector2:
-                    return a.vector2 == b.vector2;
-
-                case BlackboardObjectType.Vector3:
-                    return a.vector3 == b.vector3;
-
-                case BlackboardObjectType.Object:
-                    return a.objRef == b.objRef;
-            }
-
-            return false;
-        }
-
-        private static bool IsBoolType( BlackboardKeyMapping mapping )
-        {
-            BlackboardObjectType type = mapping.type;
-
-            return     type == BlackboardObjectType.Bool 
-                    || type == BlackboardObjectType.True
-                    || type == BlackboardObjectType.False;
-        }
-
         public BlackboardKeyMapping( BlackboardObjectType type, string keyString )
         {
             this.type = type;
@@ -191,7 +155,6 @@ namespace AI.Tree
             {
                 switch ( type )
                 {
-                    case BlackboardObjectType.NavMeshAgent:
                     case BlackboardObjectType.Object:
                         objRef = data;
                         break;
@@ -231,9 +194,6 @@ namespace AI.Tree
         {
             switch ( type )
             {
-                case BlackboardObjectType.NavMeshAgent:
-                return testObj is NavMeshAgent;
-
                 case BlackboardObjectType.Float:
                 return testObj is float;
                 
@@ -243,8 +203,6 @@ namespace AI.Tree
                 case BlackboardObjectType.String:
                 return testObj is string;
 
-                case BlackboardObjectType.True:
-                case BlackboardObjectType.False:
                 case BlackboardObjectType.Bool:
                 return testObj is bool;
 
@@ -263,33 +221,18 @@ namespace AI.Tree
 
         public BlackboardKeyMapping Clone()
         {
-            BlackboardKeyMapping clone = new BlackboardKeyMapping( type, keyString );
-
-            clone.vector3 = vector3 * 1;
-            clone.vector2 = vector2 * 1;
-            clone.stringValue = (string)stringValue.Clone();
-            clone.floatValue = floatValue;
-            clone.intValue = intValue;
-            clone.boolValue = boolValue;
-            clone.objRef = objRef;
+            BlackboardKeyMapping clone = new BlackboardKeyMapping(type, keyString)
+            {
+                vector3 = vector3 * 1,
+                vector2 = vector2 * 1,
+                stringValue = (string)stringValue.Clone(),
+                floatValue = floatValue,
+                intValue = intValue,
+                boolValue = boolValue,
+                objRef = objRef
+            };
 
             return clone;
-        }
-    
-        public void Update()
-        {
-            if ( type == BlackboardObjectType.Float )
-            {
-                if ( boolValue && floatValue > 0f )
-                {
-                    floatValue -= Time.deltaTime;
-                    if ( floatValue <= 0f )
-                    {
-                        floatValue = 0f;
-                        boolValue = false; // Only decrease float value once
-                    }
-                }
-            }
         }
     }
 }
