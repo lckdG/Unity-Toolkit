@@ -2,7 +2,10 @@ using System;
 using System.Collections.Generic;
 
 using UnityEngine;
+#if UNITY_EDITOR
 using UnityEditor;
+using AI.Tree.Editor;
+#endif
 
 namespace AI.Tree
 {
@@ -121,10 +124,24 @@ namespace AI.Tree
         }
 
 #if UNITY_EDITOR
+
+#region Blackboard Handling
         void Awake()
         {
-            if ( AssetDatabase.IsAssetImportWorkerProcess() ) return;
+            string assetPath = AssetDatabase.GetAssetPath( this );
+            if ( AssetDatabase.IsAssetImportWorkerProcess() || string.IsNullOrEmpty( assetPath ) )
+            {
+                BehaviorTreeEditorUtility.RegisterAssetPostprocessCallback( OnAssetPostProcessed );
+                return;
+            }
+
             UpdateBlackboard( );
+        }
+        
+        void OnAssetPostProcessed()
+        {
+            BehaviorTreeEditorUtility.UnregisterAssetPostprocessCallback( OnAssetPostProcessed );
+            UpdateBlackboard();
         }
 
         void UpdateBlackboard( )
@@ -142,7 +159,7 @@ namespace AI.Tree
                 string blackboardPath = parentFolder + $"/{blackboardName}";
 
                 AssetDatabase.CreateAsset( blackboardRef, blackboardPath );
-                AssetDatabase.ForceReserializeAssets( new string[] { assetPath } );
+                BehaviorTreeEditorUtility.DelayRefreshAssetDatabase( assetPath );
             }
             else if ( blackboardRef.name.IndexOf( blackboardName ) == -1 )
             {
@@ -150,11 +167,13 @@ namespace AI.Tree
                 string newName = blackboardName.Replace( ".asset", "" );
 
                 AssetDatabase.RenameAsset( oldBlackboardPath, newName );
-                AssetDatabase.Refresh();
+                BehaviorTreeEditorUtility.DelayRefreshAssetDatabase( assetPath );
             }
         }
 
+#endregion
 
+#region Node Handling
         public Node CreateNode( Type type )
         {
             Node node = CreateInstance( type ) as Node;
@@ -240,6 +259,8 @@ namespace AI.Tree
                 EditorUtility.SetDirty( composite );
             }
         }
+#endregion
+
 #endif
     }
 }
