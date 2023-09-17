@@ -6,6 +6,7 @@ using UnityEditor;
 
 namespace AI.Tree.Editor
 {
+    // TODO: add pre-defined keys
     [CustomEditor(typeof(Blackboard), true)]
     public class BlackboardEditor : UnityEditor.Editor
     {

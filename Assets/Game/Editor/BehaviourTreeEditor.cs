@@ -8,6 +8,7 @@ using UnityEditor.Callbacks;
 
 namespace AI.Tree.Editor
 {
+    // TODO: re-integrate Blackboard inspector
     public class BehaviourTreeEditor : EditorWindow
     {
         public static string editorPath { 
