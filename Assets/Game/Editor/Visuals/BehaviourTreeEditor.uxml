@@ -1,0 +1,20 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <Style src="project://database/Assets/Game/Editor/Visuals/BehaviourTreeEditor.uss?fileID=7433441132597879392&amp;guid=fe6bafa4a5a97d74d886400e34a9e6c6&amp;type=3#BehaviourTreeEditor" />
+    <uie:Toolbar>
+        <uie:ToolbarMenu display-tooltip-when-elided="true" text="Assets" />
+    </uie:Toolbar>
+    <AI.Tree.Editor.SplitView style="width: 100%; height: auto;">
+        <ui:VisualElement name="left-panel" style="width: 70%; min-width: 75%;">
+            <ui:Label text="   Tree View" display-tooltip-when-elided="true" style="border-bottom-color: rgb(196, 192, 193); border-bottom-width: 1px;" />
+            <AI.Tree.Editor.BehaviourTreeView focusable="true" style="min-height: 95%; max-height: 95%; width: 100%;" />
+        </ui:VisualElement>
+        <ui:VisualElement name="right-panel">
+            <ui:ScrollView show-horizontal-scroller="true" name="ScrollView" style="min-height: 100%;">
+                <ui:VisualElement name="inspector-container" class="inspector-view">
+                    <ui:Label text="    Inspector" display-tooltip-when-elided="true" style="border-left-width: 0; border-right-width: 0; border-top-width: 0; border-bottom-width: 1px; border-top-left-radius: 0; border-bottom-left-radius: 0; border-top-right-radius: 0; border-bottom-right-radius: 0; -unity-slice-left: 0; -unity-slice-top: 0; -unity-slice-right: 0; -unity-slice-bottom: 0; border-bottom-color: rgb(196, 192, 193); border-top-color: rgb(196, 192, 193); border-right-color: rgb(196, 192, 193); border-left-color: rgb(196, 192, 193); padding-left: 0; padding-right: 0; margin-left: 0;" />
+                    <AI.Tree.Editor.InspectorView name="node-inspector" class="inspector-view" style="margin-top: 16px; margin-right: 16px; margin-bottom: 16px; margin-left: 16px;" />
+                </ui:VisualElement>
+            </ui:ScrollView>
+        </ui:VisualElement>
+    </AI.Tree.Editor.SplitView>
+</ui:UXML>
