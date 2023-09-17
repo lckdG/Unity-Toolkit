@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
@@ -48,3 +49,4 @@ namespace AI.Tree.Editor
         }
     }
 }
+#endif
