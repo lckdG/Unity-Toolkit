@@ -8,7 +8,6 @@ using AI.Tree;
 [CustomEditor(typeof(Blackboard), true)]
 public class BlackboardEditor : Editor
 {
-    private static readonly int[] RUNTIME_OBJECT_TYPES = new int[] { (int)BlackboardObjectType.NavMeshAgent };
     private int contextSize = 0;
     private List<bool> foldouts = new List<bool>();
     private bool foldoutInited = false;
@@ -84,14 +83,7 @@ public class BlackboardEditor : Editor
                 EditorGUILayout.PropertyField( keyString, keyStringLabel );
 
                 int enumIndex = type.enumValueIndex;
-                if( !typeUseRuntimeObject( enumIndex ) )
-                {
-                    DrawPropertyFor( _, enumIndex );
-                }
-                else
-                {
-                    EditorGUILayout.LabelField("Assigned at Runtime.");
-                }
+                DrawPropertyFor( _, enumIndex );
             }
 
             EditorGUILayout.EndFoldoutHeaderGroup();
@@ -103,16 +95,6 @@ public class BlackboardEditor : Editor
     }
 
     private bool KeyStringAssigned( SerializedProperty keyString ) => !string.IsNullOrEmpty( keyString.stringValue );
-
-    private bool typeUseRuntimeObject( int index )
-    {
-        foreach( int type in RUNTIME_OBJECT_TYPES )
-        {
-            if ( type == index ) return true;
-        }
-
-        return false;
-    }
 
     private void DrawPropertyFor( SerializedProperty element, int typeIndex )
     {

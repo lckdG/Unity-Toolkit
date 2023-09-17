@@ -20,7 +20,6 @@ namespace AI.Tree
 
     public enum BlackboardObjectType
     {
-        NavMeshAgent,
         Float,
         Int,
         String,

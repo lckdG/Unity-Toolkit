@@ -9,8 +9,10 @@ namespace AI.Tree
     public class Blackboard : ScriptableObject
     {
         protected MonoBehaviour target = null;
+        [SerializeField] private NavMeshAgent agent;
         [SerializeField] private List<BlackboardKeyMapping> context = new List<BlackboardKeyMapping>();
 
+#region Setters
         public void SetOrAddData( BlackboardObjectType type, string key, object value )
         {
             if ( !HasKey( key ) )
@@ -43,6 +45,12 @@ namespace AI.Tree
             }
         }
 
+        public void SetNavMeshAgent( NavMeshAgent agent ) => this.agent = agent;
+        public void SetTarget( MonoBehaviour target ) => this.target = target;
+
+#endregion
+
+#region Getters
         public BlackboardKeyMapping GetData( string key )
         {
             BlackboardKeyMapping keyMapIndex = context.Find( x => x.keyString == key );
@@ -53,6 +61,13 @@ namespace AI.Tree
 
             return null;
         }
+
+        public NavMeshAgent GetNavMeshAgent() => agent;
+
+        public List<BlackboardKeyMapping> GetContext() => context;
+        public MonoBehaviour GetTarget() => target;
+
+#endregion
 
         public bool ClearKey( string key )
         {
@@ -76,7 +91,7 @@ namespace AI.Tree
         {
             Blackboard cloned = CreateInstance( typeof(Blackboard) ) as Blackboard;
 
-            foreach( BlackboardKeyMapping keyMap in this.context )
+            foreach( BlackboardKeyMapping keyMap in context )
             {
                 BlackboardKeyMapping clone = keyMap.Clone();
                 cloned.context.Add( clone );
@@ -84,11 +99,6 @@ namespace AI.Tree
 
             return cloned;
         }
-
-        public List<BlackboardKeyMapping> GetContext() => context;
-
-        public void SetTarget( MonoBehaviour target ) => this.target = target;
-        public MonoBehaviour GetTarget() => this.target;
     
         public bool CompareKeyMapping( BlackboardKeyMapping b )
         {
@@ -164,7 +174,6 @@ namespace AI.Tree
             {
                 switch ( type )
                 {
-                    case BlackboardObjectType.NavMeshAgent:
                     case BlackboardObjectType.Object:
                         objRef = data;
                         break;
@@ -204,9 +213,6 @@ namespace AI.Tree
         {
             switch ( type )
             {
-                case BlackboardObjectType.NavMeshAgent:
-                return testObj is NavMeshAgent;
-
                 case BlackboardObjectType.Float:
                 return testObj is float;
                 
@@ -234,15 +240,16 @@ namespace AI.Tree
 
         public BlackboardKeyMapping Clone()
         {
-            BlackboardKeyMapping clone = new BlackboardKeyMapping( type, keyString );
-
-            clone.vector3 = vector3 * 1;
-            clone.vector2 = vector2 * 1;
-            clone.stringValue = (string)stringValue.Clone();
-            clone.floatValue = floatValue;
-            clone.intValue = intValue;
-            clone.boolValue = boolValue;
-            clone.objRef = objRef;
+            BlackboardKeyMapping clone = new BlackboardKeyMapping(type, keyString)
+            {
+                vector3 = vector3 * 1,
+                vector2 = vector2 * 1,
+                stringValue = (string)stringValue.Clone(),
+                floatValue = floatValue,
+                intValue = intValue,
+                boolValue = boolValue,
+                objRef = objRef
+            };
 
             return clone;
         }
