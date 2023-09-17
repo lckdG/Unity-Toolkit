@@ -25,11 +25,15 @@ namespace AI.Tree.Editor
 
         public static async void DelayRefreshAssetDatabase( string assetPath )
         {
+            var asset = AssetDatabase.LoadAssetAtPath<UnityEngine.Object>( assetPath );
+
             await Delay();
             AssetDatabase.ForceReserializeAssets( new string[] { assetPath } );
 
             await Delay();
             AssetDatabase.Refresh();
+
+            Selection.activeObject = asset;
         }
 
         private static async Task Delay()
