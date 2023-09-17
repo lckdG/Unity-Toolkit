@@ -39,8 +39,7 @@ namespace AI.Tree
 
         public void SetData( string key, object value )
         {
-            context.TryGetValue( key, out var keyMapIndex );
-            if ( keyMapIndex != null )
+            if ( context.TryGetValue( key, out var keyMapIndex ) )
             {
                 keyMapIndex.SetData( value );
             }
@@ -54,8 +53,7 @@ namespace AI.Tree
 #region Getters
         private BlackboardKeyMapping GetData( string key )
         {
-            context.TryGetValue( key, out var keyMapIndex );
-            if ( keyMapIndex != null )
+            if ( context.TryGetValue( key, out var keyMapIndex ) )
             {
                 return keyMapIndex;
             }
@@ -76,7 +74,39 @@ namespace AI.Tree
 
         public void LogKey( string key )
         {
+            if ( context.TryGetValue( key, out var keyMapIndex ) )
+            {
+                switch ( keyMapIndex.type )
+                {
+                    case BlackboardObjectType.Float:
+                        Debug.Log( $"{key} - {keyMapIndex.floatValue}" );
+                        break;
+                    
+                    case BlackboardObjectType.Int:
+                        Debug.Log( $"{key} - {keyMapIndex.intValue}" );
+                        break;
 
+                    case BlackboardObjectType.String:
+                        Debug.Log( $"{key} - {keyMapIndex.stringValue}" );
+                        break;
+
+                    case BlackboardObjectType.Bool:
+                        Debug.Log( $"{key} - {keyMapIndex.boolValue}" );
+                        break;
+
+                    case BlackboardObjectType.Vector2:
+                        Debug.Log( $"{key} - {keyMapIndex.vector2}" );
+                        break;
+
+                    case BlackboardObjectType.Vector3:
+                        Debug.Log( $"{key} - {keyMapIndex.vector3}" );
+                        break;
+
+                    case BlackboardObjectType.Object:
+                        Debug.Log( $"{key} - {keyMapIndex.objRef}" );
+                        break;
+                }
+            }
         }
 
         public NavMeshAgent GetNavMeshAgent() => agent;
