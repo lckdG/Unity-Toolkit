@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 
 using UnityEngine;
+
 #if UNITY_EDITOR
 using UnityEditor;
 using AI.Tree.Editor;
@@ -13,11 +14,11 @@ namespace AI.Tree
     [CreateAssetMenu(menuName = "AI/Behaviour Tree")]
     public class BehaviourTree : ScriptableObject
     {
-        public Node root;
+        [ReadOnly] public Node root;
         public State treeState = State.EXECUTING;
-        public List<Node> nodes = new List<Node>();
+        [ReadOnly] public List<Node> nodes = new List<Node>();
 
-        public Blackboard blackboardRef;
+        [ReadOnly] public Blackboard blackboardRef;
         private Blackboard blackboard;
 
         public BehaviourTree Clone()
@@ -137,40 +138,23 @@ namespace AI.Tree
                 return;
             }
 
-            UpdateBlackboard( );
+            OnAssetPostProcessed( );
         }
         
         void OnAssetPostProcessed()
         {
             BehaviorTreeEditorUtility.UnregisterAssetPostprocessCallback( OnAssetPostProcessed );
-            UpdateBlackboard();
+
+            string assetPath = AssetDatabase.GetAssetPath( this );
+            if ( string.IsNullOrEmpty( assetPath ) || HasBlackboard() ) return;
+
+            BehaviorTreeEditorUtility.UpdateBlackboard( this );
         }
 
-        void UpdateBlackboard( )
+        public bool HasBlackboard() => blackboardRef != null;
+        public void AssignBlackboard( Blackboard blackboard )
         {
-            string assetPath = AssetDatabase.GetAssetPath( this );
-            if ( string.IsNullOrEmpty( assetPath ) ) return;
-
-            string parentFolder = assetPath.Substring( 0, assetPath.LastIndexOf( "/" ) );
-            string blackboardName = $"{name}_Blackboard.asset";
-
-            if ( blackboardRef == null )
-            {
-                blackboardRef = CreateInstance<Blackboard>();
-
-                string blackboardPath = parentFolder + $"/{blackboardName}";
-
-                AssetDatabase.CreateAsset( blackboardRef, blackboardPath );
-                BehaviorTreeEditorUtility.DelayRefreshAssetDatabase( assetPath );
-            }
-            else if ( blackboardRef.name.IndexOf( blackboardName ) == -1 )
-            {
-                string oldBlackboardPath = parentFolder + "/" + blackboardRef.name + ".asset";
-                string newName = blackboardName.Replace( ".asset", "" );
-
-                AssetDatabase.RenameAsset( oldBlackboardPath, newName );
-                BehaviorTreeEditorUtility.DelayRefreshAssetDatabase( assetPath );
-            }
+            blackboardRef = blackboard;
         }
 
 #endregion

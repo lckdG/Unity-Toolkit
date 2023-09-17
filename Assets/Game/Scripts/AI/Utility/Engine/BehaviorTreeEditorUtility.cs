@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using UnityEditor;
+using UnityEngine;
 
 namespace AI.Tree.Editor
 {
@@ -23,22 +24,27 @@ namespace AI.Tree.Editor
             AssetDatabasePostprocessCompleted?.Invoke();
         }
 
-        public static async void DelayRefreshAssetDatabase( string assetPath )
+        public async static void UpdateBlackboard( BehaviourTree tree )
         {
-            var asset = AssetDatabase.LoadAssetAtPath<UnityEngine.Object>( assetPath );
+            if ( tree.HasBlackboard() ) return;
+
+            Blackboard blackboard = ScriptableObject.CreateInstance<Blackboard>();
+            blackboard.name = "Blackboard";
+
+            AssetDatabase.AddObjectToAsset( blackboard, tree );
+            AssetDatabase.SaveAssets();
 
             await Delay();
+            tree.AssignBlackboard( blackboard );
+
+            await Delay();
+            string assetPath = AssetDatabase.GetAssetPath( tree );
             AssetDatabase.ForceReserializeAssets( new string[] { assetPath } );
-
-            await Delay();
-            AssetDatabase.Refresh();
-
-            Selection.activeObject = asset;
         }
 
         private static async Task Delay()
         {
-            await Task.Delay( 100 );
+            await Task.Delay( 200 );
         }
     }
 }
