@@ -1,16 +1,17 @@
 using System.Collections.Generic;
-
+using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 
 namespace AI.Tree
 {
     // TODO: simplify & clean
-    public class Blackboard : ScriptableObject
+    public partial class Blackboard : ScriptableObject
     {
         protected MonoBehaviour target = null;
         [SerializeField] private NavMeshAgent agent;
-        [SerializeField] private List<BlackboardKeyMapping> context = new List<BlackboardKeyMapping>();
+        [SerializeField] private List<BlackboardKeyMapping> keyMappingList;
+        private Dictionary<string, BlackboardKeyMapping> context = new();
 
 #region Setters
         public void SetOrAddData( BlackboardObjectType type, string key, object value )
@@ -32,13 +33,13 @@ namespace AI.Tree
                 BlackboardKeyMapping bkm = new BlackboardKeyMapping( type, key );
                 bkm.SetData( value );
 
-                context.Add( bkm );
+                context.Add( key, bkm );
             }
         }
 
         public void SetData( string key, object value )
         {
-            BlackboardKeyMapping keyMapIndex = context.Find( x => x.keyString == key );
+            context.TryGetValue( key, out var keyMapIndex );
             if ( keyMapIndex != null )
             {
                 keyMapIndex.SetData( value );
@@ -51,9 +52,9 @@ namespace AI.Tree
 #endregion
 
 #region Getters
-        public BlackboardKeyMapping GetData( string key )
+        private BlackboardKeyMapping GetData( string key )
         {
-            BlackboardKeyMapping keyMapIndex = context.Find( x => x.keyString == key );
+            context.TryGetValue( key, out var keyMapIndex );
             if ( keyMapIndex != null )
             {
                 return keyMapIndex;
@@ -62,51 +63,66 @@ namespace AI.Tree
             return null;
         }
 
-        public NavMeshAgent GetNavMeshAgent() => agent;
+        public object GetObjectData( string key )
+        {
+            context.TryGetValue( key, out var keyMapIndex );
+            if ( keyMapIndex != null && keyMapIndex.type == BlackboardObjectType.Object )
+            {
+                return keyMapIndex;
+            }
 
-        public List<BlackboardKeyMapping> GetContext() => context;
+            return null;
+        }
+
+        public void LogKey( string key )
+        {
+
+        }
+
+        public NavMeshAgent GetNavMeshAgent() => agent;
         public MonoBehaviour GetTarget() => target;
 
 #endregion
 
         public bool ClearKey( string key )
         {
-            BlackboardKeyMapping keyMapIndex = context.Find( x => x.keyString == key );
-            if ( keyMapIndex != null )
+            if ( context.ContainsKey( key ) )
             {
-                context.Remove( keyMapIndex );
+                context.Remove( key );
                 return true;
             }
-            
-            return false;
+
+            return false;           
         }
 
         public bool HasKey( string key )
         {
-            BlackboardKeyMapping desiredKeyMap = context.Find( keyMap => keyMap.keyString == key );
-            return desiredKeyMap != null;
+            return context.ContainsKey( key );
         }
 
         public Blackboard Clone()
         {
+            void CloneFrom( Blackboard blackboard, List<BlackboardKeyMapping> list )
+            {
+                foreach( BlackboardKeyMapping keyMap in list )
+                {
+                    BlackboardKeyMapping clone = keyMap.Clone();
+                    blackboard.context.Add( clone.keyString, clone );
+                }
+            }
+
             Blackboard cloned = CreateInstance( typeof(Blackboard) ) as Blackboard;
 
-            foreach( BlackboardKeyMapping keyMap in context )
+            if ( context.Count != 0 )
             {
-                BlackboardKeyMapping clone = keyMap.Clone();
-                cloned.context.Add( clone );
+                CloneFrom( cloned, context.Values.ToList() );
+            }
+            else
+            {
+                CloneFrom( cloned, keyMappingList );
             }
 
             return cloned;
-        }
-    
-        public bool CompareKeyMapping( BlackboardKeyMapping b )
-        {
-            string key = b.keyString;
-            if ( !HasKey( key ) ) return false;
-
-            BlackboardKeyMapping keyMapping = GetData( key );
-            return BlackboardKeyMapping.Compare( keyMapping, b );
         }
     }
 
@@ -122,45 +138,6 @@ namespace AI.Tree
         public int intValue;
         public bool boolValue;
         public object objRef;
-
-        public static bool Compare( BlackboardKeyMapping a, BlackboardKeyMapping b )
-        {
-            if ( IsBoolType( a ) && IsBoolType( b ) )
-            {
-                return a.boolValue == b.boolValue;
-            }
-
-            if ( a.type != b.type ) return false;
-
-            switch( a.type )
-            {
-                case BlackboardObjectType.Float:
-                    return a.floatValue == b.floatValue;
-                
-                case BlackboardObjectType.Int:
-                    return a.intValue == b.intValue;
-
-                case BlackboardObjectType.String:
-                    return a.stringValue == b.stringValue;
-
-                case BlackboardObjectType.Vector2:
-                    return a.vector2 == b.vector2;
-
-                case BlackboardObjectType.Vector3:
-                    return a.vector3 == b.vector3;
-
-                case BlackboardObjectType.Object:
-                    return a.objRef == b.objRef;
-            }
-
-            return false;
-        }
-
-        private static bool IsBoolType( BlackboardKeyMapping mapping )
-        {
-            BlackboardObjectType type = mapping.type;
-            return type == BlackboardObjectType.Bool;
-        }
 
         public BlackboardKeyMapping( BlackboardObjectType type, string keyString )
         {
