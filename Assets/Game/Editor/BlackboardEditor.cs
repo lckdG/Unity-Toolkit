@@ -73,7 +73,7 @@ namespace AI.Tree.Editor
                 string contextLabel = $"Context {i}";
                 if ( !keyStringAssigned )
                 {
-                    contextLabel = string.Concat(contextLabel, " - ERROR!");
+                    contextLabel = string.Concat(contextLabel, " - NEEDS ASSIGNMENT!");
                 } 
 
                 foldouts[i] = EditorGUILayout.BeginFoldoutHeaderGroup( foldouts[i], contextLabel );               
