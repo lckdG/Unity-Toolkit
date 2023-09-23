@@ -8,7 +8,7 @@ namespace AI.Tree
     public partial class Blackboard : ScriptableObject
     {
         protected MonoBehaviour target = null;
-        [SerializeField] private NavMeshAgent agent;
+        [ReadOnly] [SerializeField] private NavMeshAgent agent;
         [SerializeField] private List<BlackboardKeyMapping> keyMappingList;
         private Dictionary<string, BlackboardKeyMapping> context = new();
 

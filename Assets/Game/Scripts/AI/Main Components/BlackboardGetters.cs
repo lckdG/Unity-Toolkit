@@ -1,5 +1,5 @@
-using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -17,6 +17,21 @@ namespace AI.Tree
                 return keyMapIndex;
             }
 
+            return null;
+        }
+
+        public List<BlackboardKeyMapping> GetAllKeyMaps()
+        {
+#if UNITY_EDITOR
+            if ( Application.isPlaying )
+            {
+                return context.Values.ToList();
+            }
+            else
+            {
+                return keyMappingList;
+            }
+#endif
             return null;
         }
 

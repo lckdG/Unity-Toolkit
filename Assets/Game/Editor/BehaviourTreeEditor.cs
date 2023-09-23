@@ -73,17 +73,22 @@ namespace AI.Tree.Editor
             root.styleSheets.Add(styleSheet);
 
             treeView = root.Q<BehaviourTreeView>();
+
+            SplitView splitView = root.Q<SplitView>();
+            splitView.fixedPaneIndex = 1;
+            splitView.fixedPaneInitialDimension = 300;
+
             inspectorNodeView = root.Query<InspectorView>("node-inspector");
-            // inspectorBlackboardView = root.Q<InspectorView>("blackboard-inspector");
+            inspectorBlackboardView = root.Q<InspectorView>("blackboard-inspector");
 
             treeView.OnNodeSelected = OnNodeSelectionChanged;
 
             OnSelectionChange();
 
-            // if ( blackboardProperty != null )
-            // {
-            //     inspectorBlackboardView.UpdateSelection( blackboardProperty );
-            // }
+            if ( blackboardProperty != null )
+            {
+                inspectorBlackboardView.UpdateSelection( blackboardProperty );
+            }
         }
 
         private void OnEnable()
@@ -131,7 +136,7 @@ namespace AI.Tree.Editor
 
             if ( Application.isPlaying )
             {
-                if ( tree )
+                if ( tree != null && treeView != null )
                 {
                     treeView.PopulateView( tree );
                 }
@@ -146,7 +151,15 @@ namespace AI.Tree.Editor
 
             if ( tree != null )
             {
-                blackboardProperty = tree.blackboardRef;
+                string treePath = AssetDatabase.GetAssetPath( tree );
+                if ( Application.isPlaying && string.IsNullOrEmpty( treePath ) )
+                {
+                    blackboardProperty = tree.GetBlackboard();
+                }
+                else
+                {
+                    blackboardProperty = tree.blackboardRef;
+                }
             }
         }
 

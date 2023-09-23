@@ -144,6 +144,8 @@ namespace AI.Tree
             blackboardRef = blackboard;
         }
 
+        public Blackboard GetBlackboard() => blackboard;
+
 #endregion
 
 #region Node Handling
