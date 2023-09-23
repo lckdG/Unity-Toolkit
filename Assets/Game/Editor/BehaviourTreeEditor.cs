@@ -75,16 +75,16 @@ namespace AI.Tree.Editor
 
             treeView = root.Q<BehaviourTreeView>();
             inspectorNodeView = root.Query<InspectorView>("node-inspector");
-            // inspectorBlackboardView = root.Q<InspectorView>("blackboard-inspector");
+            inspectorBlackboardView = root.Q<InspectorView>("blackboard-inspector");
 
             treeView.OnNodeSelected = OnNodeSelectionChanged;
 
             OnSelectionChange();
 
-            // if ( blackboardProperty != null )
-            // {
-            //     inspectorBlackboardView.UpdateSelection( blackboardProperty );
-            // }
+            if ( blackboardProperty != null )
+            {
+                inspectorBlackboardView.UpdateSelection( blackboardProperty );
+            }
         }
 
         private void OnEnable()

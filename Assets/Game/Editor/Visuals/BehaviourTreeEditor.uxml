@@ -9,12 +9,20 @@
             <AI.Tree.Editor.BehaviourTreeView focusable="true" style="min-height: 95%; max-height: 95%; width: 100%;" />
         </ui:VisualElement>
         <ui:VisualElement name="right-panel">
-            <ui:ScrollView show-horizontal-scroller="true" name="ScrollView" style="min-height: 100%;">
-                <ui:VisualElement name="inspector-container" class="inspector-view">
-                    <ui:Label text="    Inspector" display-tooltip-when-elided="true" style="border-left-width: 0; border-right-width: 0; border-top-width: 0; border-bottom-width: 1px; border-top-left-radius: 0; border-bottom-left-radius: 0; border-top-right-radius: 0; border-bottom-right-radius: 0; -unity-slice-left: 0; -unity-slice-top: 0; -unity-slice-right: 0; -unity-slice-bottom: 0; border-bottom-color: rgb(196, 192, 193); border-top-color: rgb(196, 192, 193); border-right-color: rgb(196, 192, 193); border-left-color: rgb(196, 192, 193); padding-left: 0; padding-right: 0; margin-left: 0;" />
-                    <AI.Tree.Editor.InspectorView name="node-inspector" class="inspector-view" style="margin-top: 16px; margin-right: 16px; margin-bottom: 16px; margin-left: 16px;" />
-                </ui:VisualElement>
-            </ui:ScrollView>
+            <ui:VisualElement style="flex-grow: 1;">
+                <ui:ScrollView show-horizontal-scroller="true" name="node-inspector" style="height: 35%;">
+                    <ui:VisualElement name="inspector-container" class="inspector-view">
+                        <ui:Label text="    Inspector" display-tooltip-when-elided="true" style="border-left-width: 0; border-right-width: 0; border-top-width: 0; border-bottom-width: 1px; border-top-left-radius: 0; border-bottom-left-radius: 0; border-top-right-radius: 0; border-bottom-right-radius: 0; -unity-slice-left: 0; -unity-slice-top: 0; -unity-slice-right: 0; -unity-slice-bottom: 0; border-bottom-color: rgb(196, 192, 193); border-top-color: rgb(196, 192, 193); border-right-color: rgb(196, 192, 193); border-left-color: rgb(196, 192, 193); padding-left: 0; padding-right: 0; margin-left: 0;" />
+                        <AI.Tree.Editor.InspectorView name="node-inspector" class="inspector-view" style="margin-top: 16px; margin-right: 16px; margin-bottom: 16px; margin-left: 16px;" />
+                    </ui:VisualElement>
+                </ui:ScrollView>
+                <ui:ScrollView show-horizontal-scroller="true" name="blackboard-inspector" style="min-height: 65%; width: 100%; min-width: 100%;">
+                    <ui:VisualElement name="inspector-container" class="inspector-view">
+                        <ui:Label text="    Blackboard" display-tooltip-when-elided="true" style="border-left-width: 0; border-right-width: 0; border-top-width: 0; border-bottom-width: 1px; border-top-left-radius: 0; border-bottom-left-radius: 0; border-top-right-radius: 0; border-bottom-right-radius: 0; -unity-slice-left: 0; -unity-slice-top: 0; -unity-slice-right: 0; -unity-slice-bottom: 0; border-bottom-color: rgb(196, 192, 193); border-top-color: rgb(196, 192, 193); border-right-color: rgb(196, 192, 193); border-left-color: rgb(196, 192, 193); padding-left: 0; padding-right: 0; margin-left: 0;" />
+                        <AI.Tree.Editor.InspectorView name="blackboard-inspector" class="inspector-view" style="margin-top: 16px; margin-right: 16px; margin-bottom: 16px; margin-left: 16px;" />
+                    </ui:VisualElement>
+                </ui:ScrollView>
+            </ui:VisualElement>
         </ui:VisualElement>
     </AI.Tree.Editor.SplitView>
 </ui:UXML>
