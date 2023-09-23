@@ -74,6 +74,11 @@ namespace AI.Tree.Editor
             root.styleSheets.Add(styleSheet);
 
             treeView = root.Q<BehaviourTreeView>();
+
+            SplitView splitView = root.Q<SplitView>();
+            splitView.fixedPaneIndex = 1;
+            splitView.fixedPaneInitialDimension = 300;
+
             inspectorNodeView = root.Query<InspectorView>("node-inspector");
             inspectorBlackboardView = root.Q<InspectorView>("blackboard-inspector");
 

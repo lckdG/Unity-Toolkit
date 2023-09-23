@@ -4,11 +4,11 @@
         <uie:ToolbarMenu display-tooltip-when-elided="true" text="Assets" />
     </uie:Toolbar>
     <AI.Tree.Editor.SplitView style="width: 100%; height: auto;">
-        <ui:VisualElement name="left-panel" style="width: 70%; min-width: 75%;">
+        <ui:VisualElement name="left-panel">
             <ui:Label text="   Tree View" display-tooltip-when-elided="true" style="border-bottom-color: rgb(196, 192, 193); border-bottom-width: 1px;" />
             <AI.Tree.Editor.BehaviourTreeView focusable="true" style="min-height: 95%; max-height: 95%; width: 100%;" />
         </ui:VisualElement>
-        <ui:VisualElement name="right-panel">
+        <ui:VisualElement name="right-panel" style="flex-shrink: 1; flex-grow: 0;">
             <ui:VisualElement style="flex-grow: 1;">
                 <ui:ScrollView show-horizontal-scroller="true" name="node-inspector" style="height: 35%;">
                     <ui:VisualElement name="inspector-container" class="inspector-view">
