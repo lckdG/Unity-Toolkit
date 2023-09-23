@@ -15,8 +15,27 @@ namespace AI.Tree.Editor
         private bool foldoutInited = false;
         public override void OnInspectorGUI()
         {
-            Blackboard blackboard = target as Blackboard;
             serializedObject.Update();
+
+            if ( Application.isPlaying == false )
+            {
+                InspectBlackboardEditorMode();
+            }
+            else
+            {
+                InspectBlackboardPlayMode();
+            }
+        }
+
+        private void InspectBlackboardEditorMode()
+        {
+            using ( new EditorGUI.DisabledScope( true ) )
+            {
+                SerializedProperty navMeshAgent = serializedObject.FindProperty("agent");
+                GUIContent navMeshAgentLabel = new GUIContent( "Nav Mesh Agent", "Nav Mesh Agent of this behavior tree, should be assigned at runtime" );
+
+                EditorGUILayout.ObjectField( navMeshAgent, navMeshAgentLabel );
+            }
 
             SerializedProperty context = serializedObject.FindProperty("keyMappingList");
             
@@ -94,6 +113,14 @@ namespace AI.Tree.Editor
             EditorGUI.indentLevel--;
 
             serializedObject.ApplyModifiedProperties();
+        }
+
+        private void InspectBlackboardPlayMode()
+        {
+            Blackboard blackboard = target as Blackboard;
+            var allKeys = blackboard.GetAllKeyMaps();
+
+            EditorGUILayout.LabelField( allKeys.Count.ToString() );
         }
 
         private bool KeyStringAssigned( SerializedProperty keyString ) => !string.IsNullOrEmpty( keyString.stringValue );

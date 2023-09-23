@@ -147,7 +147,15 @@ namespace AI.Tree.Editor
 
             if ( tree != null )
             {
-                blackboardProperty = tree.blackboardRef;
+                string treePath = AssetDatabase.GetAssetPath( tree );
+                if ( Application.isPlaying && string.IsNullOrEmpty( treePath ) )
+                {
+                    blackboardProperty = tree.GetBlackboard();
+                }
+                else
+                {
+                    blackboardProperty = tree.blackboardRef;
+                }
             }
         }
 
