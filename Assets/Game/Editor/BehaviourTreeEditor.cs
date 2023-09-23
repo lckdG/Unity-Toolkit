@@ -132,7 +132,7 @@ namespace AI.Tree.Editor
 
             if ( Application.isPlaying )
             {
-                if ( tree )
+                if ( tree != null && treeView != null )
                 {
                     treeView.PopulateView( tree );
                 }
