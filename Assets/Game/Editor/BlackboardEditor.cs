@@ -6,7 +6,6 @@ using UnityEditor;
 
 namespace AI.Tree.Editor
 {
-    // TODO: create add & remove buttons
     [CustomEditor(typeof(Blackboard), true)]
     public class BlackboardEditor : UnityEditor.Editor
     {
