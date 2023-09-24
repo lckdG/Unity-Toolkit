@@ -19,7 +19,7 @@ namespace AI.Tree.Editor
         public Port output;
         public Port subOutput;
 
-        public NodeView( Node node ) : base(BehaviourTreeEditor.editorPath + "Visuals\\NodeView.uxml")
+        public NodeView( Node node ) : base(BehaviorTreeEditor.editorPath + "Visuals\\NodeView.uxml")
         {
             this.node = node;
             this.title = node.name;

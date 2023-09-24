@@ -8,13 +8,13 @@ using UnityEditor.Callbacks;
 
 namespace AI.Tree.Editor
 {
-    public class BehaviourTreeEditor : EditorWindow
+    public class BehaviorTreeEditor : EditorWindow
     {
         public static string editorPath { 
             get { 
 
                 DirectoryInfo folder = new DirectoryInfo( Directory.GetCurrentDirectory() );
-                FileInfo[] files = folder.GetFiles( "BehaviourTreeEditor.cs", SearchOption.AllDirectories );
+                FileInfo[] files = folder.GetFiles( "BehaviorTreeEditor.cs", SearchOption.AllDirectories );
 
                 if ( files.Length > 0 )
                 {
@@ -34,7 +34,7 @@ namespace AI.Tree.Editor
         }
         
         private static string _editorPath = "";
-        private BehaviourTreeView treeView;
+        private BehaviorTreeView treeView;
         private InspectorView inspectorNodeView;
         private InspectorView inspectorBlackboardView;
         Blackboard blackboardProperty;
@@ -42,14 +42,14 @@ namespace AI.Tree.Editor
         [MenuItem("Window/AI/Behaviour Tree Editor")]
         public static void OpenWindow()
         {
-            BehaviourTreeEditor wnd = GetWindow<BehaviourTreeEditor>();
-            wnd.titleContent = new GUIContent("BehaviourTreeEditor");
+            BehaviorTreeEditor wnd = GetWindow<BehaviorTreeEditor>();
+            wnd.titleContent = new GUIContent("BehaviorTreeEditor");
         }
 
         [OnOpenAsset]
         public static bool OnOpenAsset( int instanceId, int line )
         {
-            if ( Selection.activeObject is BehaviourTree )
+            if ( Selection.activeObject is BehaviorTree )
             {
                 OpenWindow();
                 return true;
@@ -64,15 +64,15 @@ namespace AI.Tree.Editor
             VisualElement root = rootVisualElement;
 
             // Import UXML
-            var visualTree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(editorPath + "Visuals\\BehaviourTreeEditor.uxml");
+            var visualTree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(editorPath + "Visuals\\BehaviorTreeEditor.uxml");
             visualTree.CloneTree(root);
 
             // A stylesheet can be added to a VisualElement.
             // The style will be applied to the VisualElement and all of its children.
-            var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(editorPath + "Visuals\\BehaviourTreeEditor.uss");
+            var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(editorPath + "Visuals\\BehaviorTreeEditor.uss");
             root.styleSheets.Add(styleSheet);
 
-            treeView = root.Q<BehaviourTreeView>();
+            treeView = root.Q<BehaviorTreeView>();
 
             SplitView splitView = root.Q<SplitView>();
             splitView.fixedPaneIndex = 1;
@@ -121,12 +121,12 @@ namespace AI.Tree.Editor
 
         private void OnSelectionChange()
         {
-            BehaviourTree tree = Selection.activeObject as BehaviourTree;
+            BehaviorTree tree = Selection.activeObject as BehaviorTree;
             if ( !tree )
             {
                 if ( Selection.activeGameObject )
                 {
-                    BehaviourTreeRunner runner = Selection.activeGameObject.GetComponent<BehaviourTreeRunner>();
+                    BehaviorTreeRunner runner = Selection.activeGameObject.GetComponent<BehaviorTreeRunner>();
                     if ( runner )
                     {
                         tree = runner.GetTree();

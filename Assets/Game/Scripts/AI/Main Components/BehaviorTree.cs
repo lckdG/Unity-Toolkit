@@ -11,8 +11,8 @@ using AI.Tree.Editor;
 namespace AI.Tree
 {
 
-    [CreateAssetMenu(menuName = "AI/Behaviour Tree")]
-    public class BehaviourTree : ScriptableObject
+    [CreateAssetMenu(menuName = "AI/Behavior Tree")]
+    public class BehaviorTree : ScriptableObject
     {
         [ReadOnly] public Node root;
         public State treeState = State.EXECUTING;
@@ -21,9 +21,9 @@ namespace AI.Tree
         [ReadOnly] public Blackboard blackboardRef;
         private Blackboard blackboard;
 
-        public BehaviourTree Clone()
+        public BehaviorTree Clone()
         {
-            BehaviourTree tree = Instantiate( this );
+            BehaviorTree tree = Instantiate( this );
             tree.root = this.root.Clone();
             tree.nodes = new List<Node>();
 

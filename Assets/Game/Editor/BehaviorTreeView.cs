@@ -10,14 +10,14 @@ using UnityEditor.Experimental.GraphView;
 
 namespace AI.Tree.Editor
 {
-    public class BehaviourTreeView : GraphView
+    public class BehaviorTreeView : GraphView
     {
         public Action<NodeView> OnNodeSelected;
 
-        public new class UxmlFactory : UxmlFactory<BehaviourTreeView, GraphView.UxmlTraits> { }
+        public new class UxmlFactory : UxmlFactory<BehaviorTreeView, GraphView.UxmlTraits> { }
 
-        private BehaviourTree tree;
-        public BehaviourTreeView()
+        private BehaviorTree tree;
+        public BehaviorTreeView()
         {
             Insert(0, new GridBackground());
 
@@ -26,7 +26,7 @@ namespace AI.Tree.Editor
             this.AddManipulator( new SelectionDragger() );
             this.AddManipulator( new RectangleSelector() );
 
-            var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>( BehaviourTreeEditor.editorPath + "Visuals\\BehaviourTreeEditor.uss");
+            var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>( BehaviorTreeEditor.editorPath + "Visuals\\BehaviorTreeEditor.uss");
             styleSheets.Add(styleSheet);
 
             Undo.undoRedoPerformed += OnUndoRedo;
@@ -37,7 +37,7 @@ namespace AI.Tree.Editor
             return GetNodeByGuid( node.guid ) as NodeView;
         }
 
-        internal void PopulateView( BehaviourTree tree )
+        internal void PopulateView( BehaviorTree tree )
         {
             this.tree = tree;
 
