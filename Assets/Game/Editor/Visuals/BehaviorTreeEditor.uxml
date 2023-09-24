@@ -1,14 +1,14 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
-    <Style src="project://database/Assets/Game/Editor/Visuals/BehaviourTreeEditor.uss?fileID=7433441132597879392&amp;guid=fe6bafa4a5a97d74d886400e34a9e6c6&amp;type=3#BehaviourTreeEditor" />
+    <Style src="project://database/Assets/Game/Editor/Visuals/BehaviorTreeEditor.uss?fileID=7433441132597879392&amp;guid=fe6bafa4a5a97d74d886400e34a9e6c6&amp;type=3#BehaviorTreeEditor" />
     <uie:Toolbar>
         <uie:ToolbarMenu display-tooltip-when-elided="true" text="Assets" />
     </uie:Toolbar>
     <AI.Tree.Editor.SplitView style="width: 100%; height: auto;">
         <ui:VisualElement name="left-panel">
             <ui:Label text="   Tree View" display-tooltip-when-elided="true" style="border-bottom-color: rgb(196, 192, 193); border-bottom-width: 1px;" />
-            <AI.Tree.Editor.BehaviourTreeView focusable="true" style="min-height: 95%; max-height: 95%; width: 100%;" />
+            <AI.Tree.Editor.BehaviorTreeView focusable="true" style="width: 100%; height: 100%;" />
         </ui:VisualElement>
-        <ui:VisualElement name="right-panel" style="flex-shrink: 1; flex-grow: 0;">
+        <ui:VisualElement name="right-panel">
             <ui:VisualElement style="flex-grow: 1;">
                 <ui:ScrollView show-horizontal-scroller="true" name="node-inspector" style="height: 35%;">
                     <ui:VisualElement name="inspector-container" class="inspector-view">

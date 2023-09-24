@@ -25,7 +25,7 @@ namespace AI.Tree.Editor
             AssetDatabasePostprocessCompleted?.Invoke();
         }
 
-        public async static void UpdateBlackboard( BehaviourTree tree )
+        public async static void UpdateBlackboard( BehaviorTree tree )
         {
             if ( tree.HasBlackboard() ) return;
 

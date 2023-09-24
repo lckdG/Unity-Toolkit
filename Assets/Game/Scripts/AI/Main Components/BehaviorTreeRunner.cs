@@ -2,10 +2,10 @@ using UnityEngine;
 
 namespace AI.Tree
 {
-    public class BehaviourTreeRunner : MonoBehaviour
+    public class BehaviorTreeRunner : MonoBehaviour
     {
-        [SerializeField] protected BehaviourTree cloneFrom;
-        private BehaviourTree tree;
+        [SerializeField] protected BehaviorTree cloneFrom;
+        private BehaviorTree tree;
 
 #region Tree Setups
         void Awake()
@@ -25,7 +25,7 @@ namespace AI.Tree
             }
         }
 
-        public void CloneFromTree( BehaviourTree tree )
+        public void CloneFromTree( BehaviorTree tree )
         {
             this.tree = tree.Clone();
             this.tree.Setup();
@@ -61,7 +61,7 @@ namespace AI.Tree
 #endregion
 
 #if UNITY_EDITOR
-        public BehaviourTree GetTree()
+        public BehaviorTree GetTree()
         {
             return tree;
         }
