@@ -30,6 +30,14 @@ MonoBehaviour:
     floatValue: 2
     intValue: 0
     boolValue: 0
+  - type: 0
+    keyString: B
+    vector3: {x: 0, y: 0, z: 0}
+    vector2: {x: 0, y: 0}
+    stringValue: 
+    floatValue: 2
+    intValue: 0
+    boolValue: 0
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
