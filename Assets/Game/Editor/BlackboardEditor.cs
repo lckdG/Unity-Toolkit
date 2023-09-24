@@ -6,7 +6,6 @@ using UnityEditor;
 
 namespace AI.Tree.Editor
 {
-    // TODO: create add & remove buttons
     [CustomEditor(typeof(Blackboard), true)]
     public class BlackboardEditor : UnityEditor.Editor
     {
@@ -30,6 +29,7 @@ namespace AI.Tree.Editor
         private void InspectBlackboardEditorMode()
         {
             SerializedProperty context = serializedObject.FindProperty("keyMappingList");
+            InitFoldout( context.arraySize );
 
             void InsertElementToContext()
             {
@@ -48,12 +48,27 @@ namespace AI.Tree.Editor
                 GUIContent navMeshAgentLabel = new GUIContent( "Nav Mesh Agent", "Nav Mesh Agent of this behavior tree, should be assigned at runtime" );
 
                 EditorGUILayout.ObjectField( navMeshAgent, navMeshAgentLabel );
+
+                GUIContent contextSizeLabel = new GUIContent("Context Size");
+                EditorGUILayout.IntField( contextSizeLabel, contextSize > 0 ? contextSize : 0 );
             }
 
-            InitFoldout( context.arraySize );
 
-            GUIContent contextSizeLabel = new GUIContent("Context Size");
-            contextSize = EditorGUILayout.IntField( contextSizeLabel, contextSize > 0 ? contextSize : 0 );
+            EditorGUILayout.BeginHorizontal();
+
+            if ( GUILayout.Button("+") )
+            {
+                ++contextSize;
+            }
+
+            if ( GUILayout.Button("-") )
+            {
+                --contextSize;
+            }
+
+            EditorGUILayout.EndHorizontal();
+
+            EditorGUILayout.Space();
 
             UpdateFoldout( context.arraySize, InsertElementToContext, RemoveElementFromContext );
             EditorGUI.indentLevel++;
