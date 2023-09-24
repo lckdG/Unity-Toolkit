@@ -2,7 +2,7 @@
 Unity-BehaviorTree is a simple extension I wrote as a base system for running AIs with Behavior Tree. It comes with an Editor Window.
 
 ## Credit
-This work is based on a tutorial from [this tutorial](https://youtu.be/nKpM98I7PeM?si=-UtoN0EHa4JseNAJ) -- [TheKiwiCoder](https://www.youtube.com/@TheKiwiCoder).
+This work is based on a tutorial from [this link](https://youtu.be/nKpM98I7PeM?si=-UtoN0EHa4JseNAJ) -- [TheKiwiCoder](https://www.youtube.com/@TheKiwiCoder).
 
 ## Usage
 - **Create Behavior Tree** asset from **Assets > Create > AI > Behavior Tree**. Each tree will be created with a Blackboard asset.
