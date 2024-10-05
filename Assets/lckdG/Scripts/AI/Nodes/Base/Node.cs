@@ -14,7 +14,7 @@ namespace AI.Tree
 
         public State Update()
         {
-            if ( !started )
+            if (started == false)
             {
                 OnStart();
                 started = true;
@@ -22,7 +22,7 @@ namespace AI.Tree
 
             state = OnUpdate();
 
-            if ( state == State.FAILED || state == State.SUCCESS )
+            if (state == State.FAILED || state == State.SUCCESS)
             {
                 OnStop();
                 started = false;
@@ -31,14 +31,14 @@ namespace AI.Tree
             return state;
         }
 
-        public void SetBlackboard( Blackboard board )
+        public void SetBlackboard(Blackboard board)
         {
             blackboard = board;
         }
 
         public virtual Node Clone()
         {
-            return Instantiate( this );
+            return Instantiate(this);
         }
 
         public bool IsSucceeded() => state == State.SUCCESS;

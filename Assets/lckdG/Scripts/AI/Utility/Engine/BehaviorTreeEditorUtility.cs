@@ -9,13 +9,13 @@ namespace AI.Tree.Editor
     {
         private static System.Action AssetDatabasePostprocessCompleted;
 
-        public static void RegisterAssetPostprocessCallback( System.Action callback )
+        public static void RegisterAssetPostprocessCallback(System.Action callback)
         {
-            if ( callback == null ) return;
+            if (callback == null) return;
             AssetDatabasePostprocessCompleted += callback;
         }
 
-        public static void UnregisterAssetPostprocessCallback( System.Action callback )
+        public static void UnregisterAssetPostprocessCallback(System.Action callback)
         {
             AssetDatabasePostprocessCompleted -= callback;
         }
@@ -25,27 +25,27 @@ namespace AI.Tree.Editor
             AssetDatabasePostprocessCompleted?.Invoke();
         }
 
-        public async static void UpdateBlackboard( BehaviorTree tree )
+        public async static void UpdateBlackboard(BehaviorTree tree)
         {
-            if ( tree.HasBlackboard() ) return;
+            if (tree.HasBlackboard()) return;
 
             Blackboard blackboard = ScriptableObject.CreateInstance<Blackboard>();
             blackboard.name = "Blackboard";
 
-            AssetDatabase.AddObjectToAsset( blackboard, tree );
+            AssetDatabase.AddObjectToAsset(blackboard, tree);
             AssetDatabase.SaveAssets();
 
             await Delay();
-            tree.AssignBlackboard( blackboard );
+            tree.AssignBlackboard(blackboard);
 
             await Delay();
-            string assetPath = AssetDatabase.GetAssetPath( tree );
-            AssetDatabase.ForceReserializeAssets( new string[] { assetPath } );
+            string assetPath = AssetDatabase.GetAssetPath(tree);
+            AssetDatabase.ForceReserializeAssets(new string[] { assetPath });
         }
 
         private static async Task Delay()
         {
-            await Task.Delay( 200 );
+            await Task.Delay(200);
         }
     }
 }

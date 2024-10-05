@@ -10,9 +10,9 @@ namespace AI.Tree
         public NavMeshAgent GetNavMeshAgent() => agent;
         public MonoBehaviour GetTarget() => target;
 
-        private BlackboardKeyMapping GetData( string key )
+        private BlackboardKeyMapping GetData(string key)
         {
-            if ( context.TryGetValue( key, out var keyMapIndex ) )
+            if (context.TryGetValue(key, out var keyMapIndex))
             {
                 return keyMapIndex;
             }
@@ -23,7 +23,7 @@ namespace AI.Tree
         public List<BlackboardKeyMapping> GetAllKeyMaps()
         {
 #if UNITY_EDITOR
-            if ( Application.isPlaying )
+            if (Application.isPlaying)
             {
                 return context.Values.ToList();
             }
@@ -31,14 +31,15 @@ namespace AI.Tree
             {
                 return keyMappingList;
             }
-#endif
+#else
             return null;
+#endif
         }
 
-        public float? GetFloat( string key )
+        public float? GetFloat(string key)
         {
-            var keyMap = GetData( key );
-            if ( keyMap != null && keyMap.type == BlackboardObjectType.Float )
+            var keyMap = GetData(key);
+            if (keyMap != null && keyMap.type == BlackboardObjectType.Float)
             {
                 return keyMap.floatValue;
             }
@@ -46,10 +47,10 @@ namespace AI.Tree
             return null;
         }
 
-        public int? GetInt( string key )
+        public int? GetInt(string key)
         {
-            var keyMap = GetData( key );
-            if ( keyMap != null && keyMap.type == BlackboardObjectType.Int )
+            var keyMap = GetData(key);
+            if (keyMap != null && keyMap.type == BlackboardObjectType.Int)
             {
                 return keyMap.intValue;
             }
@@ -57,10 +58,10 @@ namespace AI.Tree
             return null;
         }
 
-        public string GetString( string key )
+        public string GetString(string key)
         {
             var keyMap = GetData( key );
-            if ( keyMap != null && keyMap.type == BlackboardObjectType.String )
+            if (keyMap != null && keyMap.type == BlackboardObjectType.String)
             {
                 return keyMap.stringValue;
             }
@@ -68,10 +69,10 @@ namespace AI.Tree
             return null;
         }
 
-        public bool? GetBool( string key )
+        public bool? GetBool(string key)
         {
-            var keyMap = GetData( key );
-            if ( keyMap != null && keyMap.type == BlackboardObjectType.Bool )
+            var keyMap = GetData(key);
+            if (keyMap != null && keyMap.type == BlackboardObjectType.Bool)
             {
                 return keyMap.boolValue;
             }
@@ -79,10 +80,10 @@ namespace AI.Tree
             return null;
         }
 
-        public Vector2? GetVector2( string key )
+        public Vector2? GetVector2(string key)
         {
-            var keyMap = GetData( key );
-            if ( keyMap != null && keyMap.type == BlackboardObjectType.Vector2 )
+            var keyMap = GetData(key);
+            if (keyMap != null && keyMap.type == BlackboardObjectType.Vector2)
             {
                 return keyMap.vector2;
             }
@@ -90,10 +91,10 @@ namespace AI.Tree
             return null;
         }
 
-        public Vector3? GetVector3( string key )
+        public Vector3? GetVector3(string key)
         {
-            var keyMap = GetData( key );
-            if ( keyMap != null && keyMap.type == BlackboardObjectType.Vector3 )
+            var keyMap = GetData(key);
+            if (keyMap != null && keyMap.type == BlackboardObjectType.Vector3)
             {
                 return keyMap.vector3;
             }
@@ -101,10 +102,10 @@ namespace AI.Tree
             return null;
         }
 
-        public object GetObject( string key )
+        public object GetObject(string key)
         {
-            var keyMap = GetData( key );
-            if ( keyMap != null && keyMap.type == BlackboardObjectType.Object )
+            var keyMap = GetData(key);
+            if (keyMap != null && keyMap.type == BlackboardObjectType.Object)
             {
                 return keyMap.objRef;
             }

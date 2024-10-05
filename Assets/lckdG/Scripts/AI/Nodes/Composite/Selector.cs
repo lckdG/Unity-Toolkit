@@ -12,16 +12,16 @@ namespace AI.Tree
 
         protected override State OnUpdate()
         {
-            foreach( Node _ in children )
+            foreach(Node _ in children)
             {
                 state = _.Update();
-                if ( !IsFailed() )
+                if (IsFailed() == false)
                 {
-                    if ( lastChild != _ )
+                    if (lastChild != _)
                     {
                         ResetStateVisitor resetStateVisitor = new ResetStateVisitor();
                         IVisitee visitee = lastChild as IVisitee;
-                        if ( visitee != null ) visitee.Accept( resetStateVisitor );
+                        visitee?.Accept(resetStateVisitor);
 
                         lastChild = _;
                     }

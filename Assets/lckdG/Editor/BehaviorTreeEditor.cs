@@ -13,14 +13,14 @@ namespace AI.Tree.Editor
         public static string editorPath { 
             get { 
 
-                DirectoryInfo folder = new DirectoryInfo( Directory.GetCurrentDirectory() );
-                FileInfo[] files = folder.GetFiles( "BehaviorTreeEditor.cs", SearchOption.AllDirectories );
+                DirectoryInfo folder = new DirectoryInfo(Directory.GetCurrentDirectory());
+                FileInfo[] files = folder.GetFiles("BehaviorTreeEditor.cs", SearchOption.AllDirectories);
 
-                if ( files.Length > 0 )
+                if (files.Length > 0)
                 {
                     string absolutePath = files[0].DirectoryName;
 
-                    int relativePathStart = absolutePath.IndexOf( "\\Assets\\" );
+                    int relativePathStart = absolutePath.IndexOf("\\Assets\\");
                     _editorPath = absolutePath.Substring( relativePathStart + 1 ) + "\\";
                 }
 
@@ -47,7 +47,7 @@ namespace AI.Tree.Editor
         }
 
         [OnOpenAsset]
-        public static bool OnOpenAsset( int instanceId, int line )
+        public static bool OnOpenAsset(int instanceId, int line)
         {
             if ( Selection.activeObject is BehaviorTree )
             {
@@ -85,9 +85,9 @@ namespace AI.Tree.Editor
 
             OnSelectionChange();
 
-            if ( blackboardProperty != null )
+            if (blackboardProperty != null)
             {
-                inspectorBlackboardView.UpdateSelection( blackboardProperty );
+                inspectorBlackboardView.UpdateSelection(blackboardProperty);
             }
         }
 
@@ -104,7 +104,7 @@ namespace AI.Tree.Editor
 
         private void OnPlayModeStateChanged(PlayModeStateChange obj)
         {
-            switch ( obj )
+            switch (obj)
             {
                 case PlayModeStateChange.EnteredEditMode:
                     OnSelectionChange();
@@ -122,37 +122,37 @@ namespace AI.Tree.Editor
         private void OnSelectionChange()
         {
             BehaviorTree tree = Selection.activeObject as BehaviorTree;
-            if ( !tree )
+            if (tree == false)
             {
-                if ( Selection.activeGameObject )
+                if (Selection.activeGameObject)
                 {
                     BehaviorTreeRunner runner = Selection.activeGameObject.GetComponent<BehaviorTreeRunner>();
-                    if ( runner )
+                    if (runner)
                     {
                         tree = runner.GetTree();
                     } 
                 }
             }
 
-            if ( Application.isPlaying )
+            if (Application.isPlaying)
             {
-                if ( tree != null && treeView != null )
+                if (tree != null && treeView != null)
                 {
-                    treeView.PopulateView( tree );
+                    treeView.PopulateView(tree);
                 }
             }
             else
             {
-                if ( tree && AssetDatabase.CanOpenForEdit( AssetDatabase.GetAssetPath( Selection.activeObject) ) )
+                if (tree && AssetDatabase.CanOpenForEdit(AssetDatabase.GetAssetPath(Selection.activeObject)))
                 {
-                    treeView.PopulateView( tree );
+                    treeView.PopulateView(tree);
                 }
             }
 
-            if ( tree != null )
+            if (tree != null)
             {
-                string treePath = AssetDatabase.GetAssetPath( tree );
-                if ( Application.isPlaying && string.IsNullOrEmpty( treePath ) )
+                string treePath = AssetDatabase.GetAssetPath(tree);
+                if (Application.isPlaying && string.IsNullOrEmpty(treePath))
                 {
                     blackboardProperty = tree.GetBlackboard();
                 }
@@ -163,11 +163,11 @@ namespace AI.Tree.Editor
             }
         }
 
-        private void OnNodeSelectionChanged( NodeView node )
+        private void OnNodeSelectionChanged(NodeView node)
         {
-            if ( node != null )
+            if (node != null)
             {
-                inspectorNodeView.UpdateSelection( (Object) node.node );
+                inspectorNodeView.UpdateSelection(node.node);
             }
         }
 

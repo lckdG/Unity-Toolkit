@@ -21,10 +21,10 @@ namespace AI.Tree.Editor
         {
             Insert(0, new GridBackground());
 
-            this.AddManipulator( new ContentZoomer() );
-            this.AddManipulator( new ContentDragger() );
-            this.AddManipulator( new SelectionDragger() );
-            this.AddManipulator( new RectangleSelector() );
+            this.AddManipulator(new ContentZoomer());
+            this.AddManipulator(new ContentDragger());
+            this.AddManipulator(new SelectionDragger());
+            this.AddManipulator(new RectangleSelector());
 
             var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>( BehaviorTreeEditor.editorPath + "Visuals\\BehaviorTreeEditor.uss");
             styleSheets.Add(styleSheet);
@@ -32,71 +32,71 @@ namespace AI.Tree.Editor
             Undo.undoRedoPerformed += OnUndoRedo;
         }
 
-        private NodeView FindNodeView( Node node )
+        private NodeView FindNodeView(Node node)
         {
-            return GetNodeByGuid( node.guid ) as NodeView;
+            return GetNodeByGuid(node.guid) as NodeView;
         }
 
-        internal void PopulateView( BehaviorTree tree )
+        internal void PopulateView(BehaviorTree tree)
         {
             this.tree = tree;
 
             graphViewChanged -= OnGraphViewChanged;
-            DeleteElements( graphElements.ToList() );
+            DeleteElements(graphElements.ToList());
             graphViewChanged += OnGraphViewChanged;
 
-            if ( tree.root == null )
+            if (tree.root == null)
             {
-                tree.root = tree.CreateNode( typeof( Root ) ) as Root;
-                EditorUtility.SetDirty( tree );
+                tree.root = tree.CreateNode(typeof(Root)) as Root;
+                EditorUtility.SetDirty(tree);
                 AssetDatabase.SaveAssets();
             }
 
-            tree.nodes.ForEach( n => CreateNodeView( n ) );
-            tree.nodes.ForEach( n => {
+            tree.nodes.ForEach(n => CreateNodeView(n));
+            tree.nodes.ForEach(n => {
 
-                NodeView parentView = FindNodeView( n );
+                NodeView parentView = FindNodeView(n);
 
-                var children = tree.GetChildren( n );
+                var children = tree.GetChildren(n);
 
-                if ( parentView.subOutput != null ) // Simple parallel node only
+                if (parentView.subOutput != null) // Simple parallel node only
                 {
                     Node mainAction = children[0];
                     Node subAction = children[1]; 
 
-                    NodeView mainActionView = FindNodeView( mainAction );
-                    Edge mainEdge = parentView.output.ConnectTo( mainActionView.input );
-                    AddElement( mainEdge );
+                    NodeView mainActionView = FindNodeView(mainAction);
+                    Edge mainEdge = parentView.output.ConnectTo(mainActionView.input);
+                    AddElement(mainEdge);
 
-                    NodeView subActionView = FindNodeView( subAction );
-                    Edge subEdge = parentView.subOutput.ConnectTo( subActionView.input );
-                    AddElement( subEdge );
+                    NodeView subActionView = FindNodeView(subAction);
+                    Edge subEdge = parentView.subOutput.ConnectTo(subActionView.input);
+                    AddElement(subEdge);
                 }
                 else
                 {
-                    children.ForEach( c => {
-                        NodeView childView = FindNodeView( c );
+                    children.ForEach(c => {
+                        NodeView childView = FindNodeView(c);
 
-                        Edge edge = parentView.output.ConnectTo( childView.input );
-                        AddElement( edge );
+                        Edge edge = parentView.output.ConnectTo(childView.input);
+                        AddElement(edge);
                     });
                 }
 
-            } );
+            });
         }
 
-        private void CreateNodeView( Node node )
+        private void CreateNodeView(Node node)
         {
-            NodeView nodeView = new NodeView( node );
+            NodeView nodeView = new NodeView(node);
             nodeView.OnNodeSelected = OnNodeSelected;
-            AddElement( nodeView );
+            AddElement(nodeView);
         }
 
         public override void BuildContextualMenu(ContextualMenuPopulateEvent evt)
         {
             {
                 var types = TypeCache.GetTypesDerivedFrom<Action>();
-                foreach( var type in types )
+                foreach(var type in types)
                 {
                     evt.menu.AppendAction($"[{type.BaseType.Name}] {type.Name}", ( _ ) => CreateNode( type ) );
                 }
@@ -104,15 +104,15 @@ namespace AI.Tree.Editor
 
             {
                 var types = TypeCache.GetTypesDerivedFrom<Composite>();
-                foreach( var type in types )
+                foreach(var type in types)
                 {
-                    evt.menu.AppendAction($"[{type.BaseType.Name}] {type.Name}", ( _ ) => CreateNode( type ) );
+                    evt.menu.AppendAction($"[{type.BaseType.Name}] {type.Name}", ( _ ) => CreateNode( type ));
                 }
             }
 
             {
                 var types = TypeCache.GetTypesDerivedFrom<Decorator>();
-                foreach( var type in types )
+                foreach(var type in types)
                 {
                     evt.menu.AppendAction($"[{type.BaseType.Name}] {type.Name}", ( _ ) => CreateNode( type ) );
                 }
@@ -120,17 +120,15 @@ namespace AI.Tree.Editor
 
         }
 
-        private void CreateNode( System.Type type )
+        private void CreateNode(System.Type type)
         {
-            Node node = tree.CreateNode( type );
-            CreateNodeView( node );
+            Node node = tree.CreateNode(type);
+            CreateNodeView(node);
         }
 
-        private GraphViewChange OnGraphViewChanged( GraphViewChange graphViewChange )
+        private GraphViewChange OnGraphViewChanged(GraphViewChange graphViewChange)
         {
-            if (graphViewChange.elementsToRemove != null)
-            {
-                graphViewChange.elementsToRemove.ForEach( element => {
+            graphViewChange.elementsToRemove?.ForEach( element => {
                     NodeView nodeView = element as NodeView;
                     if ( nodeView != null )
                     {
@@ -145,20 +143,16 @@ namespace AI.Tree.Editor
 
                         tree.RemoveChild( parentView.node, childView.node );
                     }
-                });          
-            }
+                });
 
-            if ( graphViewChange.edgesToCreate != null )
-            {
-                graphViewChange.edgesToCreate.ForEach( edge => {
+            graphViewChange.edgesToCreate?.ForEach( edge => {
                     NodeView parentView = edge.output.node as NodeView;
                     NodeView childView = edge.input.node as NodeView;
 
                     tree.AddChild( parentView.node, childView.node );
                 });
-            }
 
-            if ( graphViewChange.movedElements != null )
+            if (graphViewChange.movedElements != null)
             {
                 nodes.ForEach( n => {
                     NodeView view = n as NodeView;
@@ -169,20 +163,20 @@ namespace AI.Tree.Editor
             return graphViewChange;
         }
 
-        public override List<Port> GetCompatiblePorts( Port startPort, NodeAdapter nodeAdapter )
+        public override List<Port> GetCompatiblePorts(Port startPort, NodeAdapter nodeAdapter)
         {
-            return ports.ToList().Where( endPort => endPort.direction != startPort.direction && endPort.node != startPort.node).ToList();
+            return ports.ToList().Where(endPort => endPort.direction != startPort.direction && endPort.node != startPort.node).ToList();
         }
 
         private void OnUndoRedo()
         {
-            PopulateView( tree );
+            PopulateView(tree);
             AssetDatabase.SaveAssets();
         }
 
         public void UpdateNodeState()
         {
-            nodes.ForEach( n => {
+            nodes.ForEach(n => {
                 NodeView view = n as NodeView;
                 view.UpdateState();
             });
