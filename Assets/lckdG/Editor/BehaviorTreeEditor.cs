@@ -37,7 +37,7 @@ namespace DevToolkit.AI.Editor
         private InspectorView inspectorBlackboardView;
         Blackboard blackboardProperty;
 
-        [MenuItem("Window/AI/Behaviour Tree Editor")]
+        [MenuItem("DevToolkit/AI/Behaviour Tree Editor", priority = 201)]
         public static void OpenWindow()
         {
             BehaviorTreeEditor wnd = GetWindow<BehaviorTreeEditor>();

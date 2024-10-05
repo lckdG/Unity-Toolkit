@@ -11,7 +11,7 @@ using DevToolkit.AI.Editor;
 namespace DevToolkit.AI
 {
 
-    [CreateAssetMenu(menuName = "AI/Behavior Tree")]
+    [CreateAssetMenu(menuName = "DevToolkit/Behavior Tree", order = 201)]
     public class BehaviorTree : ScriptableObject
     {
         [ReadOnly] public Node root;
