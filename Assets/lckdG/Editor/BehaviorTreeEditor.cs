@@ -11,8 +11,7 @@ namespace DevToolkit.AI.Editor
     public class BehaviorTreeEditor : EditorWindow
     {
         public static string editorPath { 
-            get { 
-
+            get {
                 DirectoryInfo folder = new DirectoryInfo(Directory.GetCurrentDirectory());
                 FileInfo[] files = folder.GetFiles("BehaviorTreeEditor.cs", SearchOption.AllDirectories);
 
@@ -21,7 +20,7 @@ namespace DevToolkit.AI.Editor
                     string absolutePath = files[0].DirectoryName;
 
                     int relativePathStart = absolutePath.IndexOf("\\Assets\\");
-                    _editorPath = absolutePath.Substring( relativePathStart + 1 ) + "\\";
+                    _editorPath = absolutePath.Substring(relativePathStart + 1) + "\\";
                 }
 
                 return _editorPath;

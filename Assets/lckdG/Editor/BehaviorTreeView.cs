@@ -24,7 +24,7 @@ namespace DevToolkit.AI.Editor
             this.AddManipulator(new SelectionDragger());
             this.AddManipulator(new RectangleSelector());
 
-            var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>( BehaviorTreeEditor.editorPath + "Visuals\\BehaviorTreeEditor.uss");
+            var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(BehaviorTreeEditor.editorPath + "Visuals\\BehaviorTreeEditor.uss");
             styleSheets.Add(styleSheet);
 
             Undo.undoRedoPerformed += OnUndoRedo;
@@ -179,6 +179,4 @@ namespace DevToolkit.AI.Editor
         }
     }
 }
-
-
 #endif

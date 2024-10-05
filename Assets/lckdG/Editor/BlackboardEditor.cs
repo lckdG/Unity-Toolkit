@@ -16,7 +16,7 @@ namespace DevToolkit.AI.Editor
         {
             serializedObject.Update();
 
-            if ( Application.isPlaying == false )
+            if (Application.isPlaying == false)
             {
                 InspectBlackboardEditorMode();
             }
