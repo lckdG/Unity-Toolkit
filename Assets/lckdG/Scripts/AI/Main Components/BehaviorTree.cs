@@ -177,10 +177,8 @@ namespace DevToolkit.AI
         public void DeleteNode(Node node)
         {
             Undo.RecordObject(this, "Behaviour Tree (DeleteNode)");
-
             nodes.Remove(node);
 
-            // AssetDatabase.RemoveObjectFromAsset( node );
             Undo.DestroyObjectImmediate(node);
             AssetDatabase.SaveAssets();
         }

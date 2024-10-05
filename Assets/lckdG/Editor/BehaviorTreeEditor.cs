@@ -112,7 +112,7 @@ namespace DevToolkit.AI.Editor
         private void OnSelectionChange()
         {
             BehaviorTree tree = Selection.activeObject as BehaviorTree;
-            if (tree == false)
+            if (tree == null)
             {
                 if (Selection.activeGameObject)
                 {
@@ -126,14 +126,14 @@ namespace DevToolkit.AI.Editor
 
             if (Application.isPlaying)
             {
-                if (tree != null && treeView != null)
+                if (treeView != null)
                 {
                     treeView.PopulateView(tree);
                 }
             }
             else
             {
-                if (tree && AssetDatabase.CanOpenForEdit(AssetDatabase.GetAssetPath(Selection.activeObject)))
+                if (AssetDatabase.CanOpenForEdit(AssetDatabase.GetAssetPath(Selection.activeObject)))
                 {
                     treeView.PopulateView(tree);
                 }

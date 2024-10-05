@@ -41,6 +41,8 @@ namespace DevToolkit.AI.Editor
 
             graphViewChanged -= OnGraphViewChanged;
             DeleteElements(graphElements.ToList());
+
+            if (tree == null) return;
             graphViewChanged += OnGraphViewChanged;
 
             tree.nodes.ForEach(n => CreateNodeView(n));
@@ -71,7 +73,6 @@ namespace DevToolkit.AI.Editor
                         AddElement(edge);
                     });
                 }
-
             });
         }
 
