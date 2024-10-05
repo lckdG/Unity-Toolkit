@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace AI.Tree
+namespace DevToolkit.AI
 {
     public abstract class Decorator : Node, IVisitee
     {

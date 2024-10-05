@@ -1,6 +1,6 @@
 using Random = UnityEngine.Random;
 
-namespace AI.Tree
+namespace DevToolkit.AI
 {
     public class Randomize : Composite
     {

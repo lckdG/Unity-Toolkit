@@ -3,7 +3,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 
-namespace AI.Tree
+namespace DevToolkit.AI
 {
     public partial class Blackboard : ScriptableObject
     {

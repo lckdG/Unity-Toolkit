@@ -8,7 +8,7 @@ using UnityEditor.Experimental.GraphView;
 using UnityEngine.UIElements;
 using UnityEngine.EventSystems;
 
-namespace AI.Tree.Editor
+namespace DevToolkit.AI.Editor
 {
     public class NodeView : UnityEditor.Experimental.GraphView.Node
     {

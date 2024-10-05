@@ -2,7 +2,7 @@
 
 using UnityEngine.UIElements;
 
-namespace AI.Tree.Editor
+namespace DevToolkit.AI.Editor
 {
     public class InspectorView : VisualElement
     {

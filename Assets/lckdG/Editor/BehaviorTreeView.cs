@@ -8,7 +8,7 @@ using UnityEditor;
 using UnityEngine.UIElements;
 using UnityEditor.Experimental.GraphView;
 
-namespace AI.Tree.Editor
+namespace DevToolkit.AI.Editor
 {
     public class BehaviorTreeView : GraphView
     {

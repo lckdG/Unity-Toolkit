@@ -5,10 +5,10 @@ using UnityEngine;
 
 #if UNITY_EDITOR
 using UnityEditor;
-using AI.Tree.Editor;
+using DevToolkit.AI.Editor;
 #endif
 
-namespace AI.Tree
+namespace DevToolkit.AI
 {
 
     [CreateAssetMenu(menuName = "AI/Behavior Tree")]

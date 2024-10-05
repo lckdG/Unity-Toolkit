@@ -4,7 +4,7 @@ using UnityEngine;
 
 using UnityEditor;
 
-namespace AI.Tree.Editor
+namespace DevToolkit.AI.Editor
 {
     [CustomEditor(typeof(Blackboard), true)]
     public class BlackboardEditor : UnityEditor.Editor

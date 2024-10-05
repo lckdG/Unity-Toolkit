@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace AI.Tree
+namespace DevToolkit.AI
 {
     public abstract class Composite : Node, IVisitee
     {

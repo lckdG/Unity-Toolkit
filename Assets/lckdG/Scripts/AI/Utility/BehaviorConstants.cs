@@ -1,4 +1,4 @@
-namespace AI.Tree
+namespace DevToolkit.AI
 {
     public static class BehaviourConstants
     {
