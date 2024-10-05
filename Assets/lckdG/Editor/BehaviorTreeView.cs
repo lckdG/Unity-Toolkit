@@ -43,13 +43,6 @@ namespace DevToolkit.AI.Editor
             DeleteElements(graphElements.ToList());
             graphViewChanged += OnGraphViewChanged;
 
-            if (tree.root == null)
-            {
-                tree.root = tree.CreateNode(typeof(Root)) as Root;
-                EditorUtility.SetDirty(tree);
-                AssetDatabase.SaveAssets();
-            }
-
             tree.nodes.ForEach(n => CreateNodeView(n));
             tree.nodes.ForEach(n => {
                 NodeView parentView = FindNodeView(n);

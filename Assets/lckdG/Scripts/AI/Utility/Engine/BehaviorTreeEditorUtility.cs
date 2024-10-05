@@ -25,7 +25,26 @@ namespace DevToolkit.AI.Editor
             AssetDatabasePostprocessCompleted?.Invoke();
         }
 
-        public async static void UpdateBlackboard(BehaviorTree tree)
+        public async static Task CreateRoot(BehaviorTree tree)
+        {
+            if (tree.root != null) return;
+
+            Root root = ScriptableObject.CreateInstance<Root>();
+            root.name = "Root";
+
+            AssetDatabase.AddObjectToAsset(root, tree);
+            AssetDatabase.SaveAssets();
+
+            await Delay();
+            tree.root = root;
+            tree.nodes.Add(root);
+            
+            await Delay();
+            string assetPath = AssetDatabase.GetAssetPath(tree);
+            AssetDatabase.ForceReserializeAssets(new string[] { assetPath });
+        }
+
+        public async static Task UpdateBlackboard(BehaviorTree tree)
         {
             if (tree.HasBlackboard()) return;
 

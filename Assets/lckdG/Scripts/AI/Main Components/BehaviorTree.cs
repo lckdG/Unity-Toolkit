@@ -44,7 +44,7 @@ namespace DevToolkit.AI
 
         private void BindBlackboard()
         {
-            Traverse( root, (n) => {
+            Traverse(root, (n) => {
                 n.SetBlackboard(blackboard);
             });
         }
@@ -128,14 +128,19 @@ namespace DevToolkit.AI
             OnAssetPostProcessed();
         }
         
-        void OnAssetPostProcessed()
+        async void OnAssetPostProcessed()
         {
             BehaviorTreeEditorUtility.UnregisterAssetPostprocessCallback(OnAssetPostProcessed);
 
             string assetPath = AssetDatabase.GetAssetPath(this);
-            if ( string.IsNullOrEmpty(assetPath) || HasBlackboard()) return;
+            if (string.IsNullOrEmpty(assetPath)) return;
 
-            BehaviorTreeEditorUtility.UpdateBlackboard(this);
+            Selection.activeObject = null;
+
+            await BehaviorTreeEditorUtility.CreateRoot(this);
+            await BehaviorTreeEditorUtility.UpdateBlackboard(this);
+
+            Selection.activeObject = this;
         }
 
         public bool HasBlackboard() => blackboardRef != null;
@@ -164,7 +169,6 @@ namespace DevToolkit.AI
             }
 
             Undo.RegisterCreatedObjectUndo(node, "Behaviour Tree (CreateNode)");
-
             AssetDatabase.SaveAssets();
 
             return node;
