@@ -91,18 +91,10 @@ namespace DevToolkit.AI.Editor
         public override void BuildContextualMenu(ContextualMenuPopulateEvent evt)
         {
             {
-                var types = TypeCache.GetTypesDerivedFrom<Action>();
-                foreach(var type in types)
-                {
-                    evt.menu.AppendAction($"[{type.BaseType.Name}] {type.Name}", (_) => CreateNode(type));
-                }
-            }
-
-            {
                 var types = TypeCache.GetTypesDerivedFrom<Composite>();
                 foreach(var type in types)
                 {
-                    evt.menu.AppendAction($"[{type.BaseType.Name}] {type.Name}", (_) => CreateNode(type));
+                    evt.menu.AppendAction($"[{type.BaseType.Name}] - {type.Name}", (_) => CreateNode(type));
                 }
             }
 
@@ -110,10 +102,17 @@ namespace DevToolkit.AI.Editor
                 var types = TypeCache.GetTypesDerivedFrom<Decorator>();
                 foreach(var type in types)
                 {
-                    evt.menu.AppendAction($"[{type.BaseType.Name}] {type.Name}", (_) => CreateNode(type));
+                    evt.menu.AppendAction($"[{type.BaseType.Name}] - {type.Name}", (_) => CreateNode(type));
                 }
             }
 
+            {
+                var types = TypeCache.GetTypesDerivedFrom<Action>();
+                foreach(var type in types)
+                {
+                    evt.menu.AppendAction($"[{type.BaseType.Name}] - {type.Name}", (_) => CreateNode(type));
+                }
+            }
         }
 
         private void CreateNode(System.Type type)
