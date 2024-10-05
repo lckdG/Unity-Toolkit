@@ -115,7 +115,7 @@ namespace AI.Tree.Editor
                 foldoutInited = true;
                 for (; foldouts.Count < size; )
                 {
-                    foldouts.Add( false );
+                    foldouts.Add(false);
                 }
 
                 contextSize = size;
@@ -127,7 +127,7 @@ namespace AI.Tree.Editor
             if (contextSize != size)
             {
                 int diff = contextSize - size;
-                if ( diff > 0 )
+                if (diff > 0)
                 {
                     for (int i = 0; i < diff; i++)
                     {

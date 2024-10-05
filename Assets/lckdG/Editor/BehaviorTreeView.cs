@@ -98,7 +98,7 @@ namespace AI.Tree.Editor
                 var types = TypeCache.GetTypesDerivedFrom<Action>();
                 foreach(var type in types)
                 {
-                    evt.menu.AppendAction($"[{type.BaseType.Name}] {type.Name}", ( _ ) => CreateNode( type ) );
+                    evt.menu.AppendAction($"[{type.BaseType.Name}] {type.Name}", (_) => CreateNode(type));
                 }
             }
 
@@ -106,7 +106,7 @@ namespace AI.Tree.Editor
                 var types = TypeCache.GetTypesDerivedFrom<Composite>();
                 foreach(var type in types)
                 {
-                    evt.menu.AppendAction($"[{type.BaseType.Name}] {type.Name}", ( _ ) => CreateNode( type ));
+                    evt.menu.AppendAction($"[{type.BaseType.Name}] {type.Name}", (_) => CreateNode(type));
                 }
             }
 
@@ -114,7 +114,7 @@ namespace AI.Tree.Editor
                 var types = TypeCache.GetTypesDerivedFrom<Decorator>();
                 foreach(var type in types)
                 {
-                    evt.menu.AppendAction($"[{type.BaseType.Name}] {type.Name}", ( _ ) => CreateNode( type ) );
+                    evt.menu.AppendAction($"[{type.BaseType.Name}] {type.Name}", (_) => CreateNode(type));
                 }
             }
 
@@ -130,26 +130,26 @@ namespace AI.Tree.Editor
         {
             graphViewChange.elementsToRemove?.ForEach( element => {
                     NodeView nodeView = element as NodeView;
-                    if ( nodeView != null )
+                    if (nodeView != null)
                     {
-                        tree.DeleteNode( nodeView.node );
+                        tree.DeleteNode(nodeView.node);
                     }
 
                     Edge edge = element as Edge;
-                    if ( edge != null )
+                    if (edge != null)
                     {
                         NodeView parentView = edge.output.node as NodeView;
                         NodeView childView = edge.input.node as NodeView;
 
-                        tree.RemoveChild( parentView.node, childView.node );
+                        tree.RemoveChild(parentView.node, childView.node);
                     }
                 });
 
-            graphViewChange.edgesToCreate?.ForEach( edge => {
+            graphViewChange.edgesToCreate?.ForEach(edge => {
                     NodeView parentView = edge.output.node as NodeView;
                     NodeView childView = edge.input.node as NodeView;
 
-                    tree.AddChild( parentView.node, childView.node );
+                    tree.AddChild(parentView.node, childView.node);
                 });
 
             if (graphViewChange.movedElements != null)
