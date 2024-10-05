@@ -6,12 +6,12 @@ using UnityEngine;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine.UIElements;
+using UnityEngine.EventSystems;
 
 namespace AI.Tree.Editor
 {
     public class NodeView : UnityEditor.Experimental.GraphView.Node
     {
-
         public Action<NodeView> OnNodeSelected;
         public Node node;
 
@@ -51,6 +51,7 @@ namespace AI.Tree.Editor
             else if (node is Root)
             {
                 AddToClassList("root");
+                capabilities ^= Capabilities.Movable ^ Capabilities.Deletable;
             }
         }
 
@@ -116,6 +117,8 @@ namespace AI.Tree.Editor
         public override void OnSelected()
         {
             base.OnSelected();
+
+            Selection.activeObject = node;
             OnNodeSelected?.Invoke(this);
         }
 
