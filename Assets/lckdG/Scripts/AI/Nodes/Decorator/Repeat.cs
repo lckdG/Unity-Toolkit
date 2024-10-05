@@ -1,4 +1,4 @@
-namespace AI.Tree
+namespace DevToolkit.AI
 {
     // TODO: change this to repeat by time, or by secs instead
     public class Repeat : Decorator

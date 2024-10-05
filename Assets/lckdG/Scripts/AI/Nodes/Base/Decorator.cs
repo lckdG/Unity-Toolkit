@@ -1,22 +1,22 @@
 using UnityEngine;
 
-namespace AI.Tree
+namespace DevToolkit.AI
 {
     public abstract class Decorator : Node, IVisitee
     {
         [HideInInspector] public Node child;
 
-        public void Accept( INodeVisitor visitor )
+        public void Accept(INodeVisitor visitor)
         {
-            visitor.Visit( this );
+            visitor.Visit(this);
 
             IVisitee visitee = child as IVisitee;
-            if ( visitee != null ) visitee.Accept( visitor );
+            visitee?.Accept(visitor);
         }
 
         public override Node Clone()
         {
-            Decorator node = Instantiate( this );
+            Decorator node = Instantiate(this);
             node.child = child.Clone();
 
             return node;

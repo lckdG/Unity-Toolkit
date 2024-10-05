@@ -1,14 +1,13 @@
 using UnityEngine;
 
-namespace AI.Tree
+namespace DevToolkit.AI
 {
     public class Root : Node, IVisitee
     {
         [HideInInspector] public Node child;
         protected override void OnStart() { }
 
-        protected override void OnStop()
-        { }
+        protected override void OnStop() { }
 
         protected override State OnUpdate()
         {
@@ -18,7 +17,7 @@ namespace AI.Tree
 
         public override Node Clone()
         {
-            Root node = Instantiate( this );
+            Root node = Instantiate(this);
             node.child = child.Clone();
 
             return node;
@@ -26,7 +25,7 @@ namespace AI.Tree
 
         public void Accept(INodeVisitor visitor)
         {
-            IVisitee visitee = (child as IVisitee);
+            IVisitee visitee = child as IVisitee;
             visitee.Accept( visitor );
         }
     }

@@ -1,30 +1,27 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace AI.Tree
+namespace DevToolkit.AI
 {
     public abstract class Composite : Node, IVisitee
     {
         [HideInInspector] public List<Node> children = new List<Node>();
 
-        public void Accept( INodeVisitor visitor )
+        public void Accept(INodeVisitor visitor)
         {
-            visitor.Visit( this );
+            visitor.Visit(this);
 
-            foreach( Node child in children )
+            foreach(Node child in children)
             {
                 IVisitee visitee = child as IVisitee;
-                if ( visitee != null )
-                {
-                    visitee.Accept( visitor );
-                }
+                visitee?.Accept(visitor);
             }
         }
 
         public override Node Clone()
         {
-            Composite node = Instantiate( this );
-            node.children = children.ConvertAll( c => c.Clone() );
+            Composite node = Instantiate(this);
+            node.children = children.ConvertAll(c => c.Clone());
 
             return node;
         }

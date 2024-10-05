@@ -1,14 +1,14 @@
 using UnityEngine;
 using UnityEngine.AI;
 
-namespace AI.Tree
+namespace DevToolkit.AI
 {
     public static class BehaviorTreeUtility
     {
-        public static Vector3 GetNavMeshPosition( Transform transform , Vector3 worldPosition, float maxDistance, int area )
+        public static Vector3 GetNavMeshPosition(Transform transform , Vector3 worldPosition, float maxDistance, int area)
         {
             NavMeshHit hit;
-            if ( NavMesh.SamplePosition( worldPosition, out hit, maxDistance, area ) == false )
+            if ( NavMesh.SamplePosition(worldPosition, out hit, maxDistance, area ) == false)
             {
                 return transform.position;
             }

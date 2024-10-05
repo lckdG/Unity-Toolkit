@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace AI.Tree
+namespace DevToolkit.AI
 {
     public class Sequence : Composite
     {
@@ -15,9 +15,9 @@ namespace AI.Tree
 
         protected override State OnUpdate()
         {
-            Node child = children[ current ];
+            Node child = children[current];
 
-            switch( child.Update() )
+            switch(child.Update())
             {
                 case State.EXECUTING:
                     return State.EXECUTING;

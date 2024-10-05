@@ -1,7 +1,7 @@
 #if UNITY_EDITOR
 using UnityEditor;
 
-namespace AI.Tree.Editor
+namespace DevToolkit.AI.Editor
 {
     public class BehaviorTreeAssetPostprocessor : AssetPostprocessor
     {

@@ -1,7 +1,7 @@
-namespace AI.Tree
+namespace DevToolkit.AI
 {
     public interface IVisitee
     {
-        public void Accept( INodeVisitor visitor );
+        public void Accept(INodeVisitor visitor);
     }
 }

@@ -6,22 +6,21 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEditor.Callbacks;
 
-namespace AI.Tree.Editor
+namespace DevToolkit.AI.Editor
 {
     public class BehaviorTreeEditor : EditorWindow
     {
         public static string editorPath { 
-            get { 
+            get {
+                DirectoryInfo folder = new DirectoryInfo(Directory.GetCurrentDirectory());
+                FileInfo[] files = folder.GetFiles("BehaviorTreeEditor.cs", SearchOption.AllDirectories);
 
-                DirectoryInfo folder = new DirectoryInfo( Directory.GetCurrentDirectory() );
-                FileInfo[] files = folder.GetFiles( "BehaviorTreeEditor.cs", SearchOption.AllDirectories );
-
-                if ( files.Length > 0 )
+                if (files.Length > 0)
                 {
                     string absolutePath = files[0].DirectoryName;
 
-                    int relativePathStart = absolutePath.IndexOf( "\\Assets\\" );
-                    _editorPath = absolutePath.Substring( relativePathStart + 1 ) + "\\";
+                    int relativePathStart = absolutePath.IndexOf("\\Assets\\");
+                    _editorPath = absolutePath.Substring(relativePathStart + 1) + "\\";
                 }
 
                 return _editorPath;
@@ -35,11 +34,10 @@ namespace AI.Tree.Editor
         
         private static string _editorPath = "";
         private BehaviorTreeView treeView;
-        private InspectorView inspectorNodeView;
         private InspectorView inspectorBlackboardView;
         Blackboard blackboardProperty;
 
-        [MenuItem("Window/AI/Behaviour Tree Editor")]
+        [MenuItem("DevToolkit/AI/Behaviour Tree Editor", priority = 201)]
         public static void OpenWindow()
         {
             BehaviorTreeEditor wnd = GetWindow<BehaviorTreeEditor>();
@@ -47,9 +45,9 @@ namespace AI.Tree.Editor
         }
 
         [OnOpenAsset]
-        public static bool OnOpenAsset( int instanceId, int line )
+        public static bool OnOpenAsset(int instanceId, int line)
         {
-            if ( Selection.activeObject is BehaviorTree )
+            if (Selection.activeObject is BehaviorTree)
             {
                 OpenWindow();
                 return true;
@@ -73,21 +71,13 @@ namespace AI.Tree.Editor
             root.styleSheets.Add(styleSheet);
 
             treeView = root.Q<BehaviorTreeView>();
-
-            SplitView splitView = root.Q<SplitView>();
-            splitView.fixedPaneIndex = 1;
-            splitView.fixedPaneInitialDimension = 300;
-
-            inspectorNodeView = root.Query<InspectorView>("node-inspector");
             inspectorBlackboardView = root.Q<InspectorView>("blackboard-inspector");
-
-            treeView.OnNodeSelected = OnNodeSelectionChanged;
 
             OnSelectionChange();
 
-            if ( blackboardProperty != null )
+            if (blackboardProperty != null)
             {
-                inspectorBlackboardView.UpdateSelection( blackboardProperty );
+                inspectorBlackboardView.UpdateSelection(blackboardProperty);
             }
         }
 
@@ -104,7 +94,7 @@ namespace AI.Tree.Editor
 
         private void OnPlayModeStateChanged(PlayModeStateChange obj)
         {
-            switch ( obj )
+            switch (obj)
             {
                 case PlayModeStateChange.EnteredEditMode:
                     OnSelectionChange();
@@ -122,37 +112,37 @@ namespace AI.Tree.Editor
         private void OnSelectionChange()
         {
             BehaviorTree tree = Selection.activeObject as BehaviorTree;
-            if ( !tree )
+            if (tree == null)
             {
-                if ( Selection.activeGameObject )
+                if (Selection.activeGameObject)
                 {
                     BehaviorTreeRunner runner = Selection.activeGameObject.GetComponent<BehaviorTreeRunner>();
-                    if ( runner )
+                    if (runner)
                     {
                         tree = runner.GetTree();
-                    } 
+                    }
                 }
             }
 
-            if ( Application.isPlaying )
+            if (Application.isPlaying)
             {
-                if ( tree != null && treeView != null )
+                if (treeView != null)
                 {
-                    treeView.PopulateView( tree );
+                    treeView.PopulateView(tree);
                 }
             }
             else
             {
-                if ( tree && AssetDatabase.CanOpenForEdit( AssetDatabase.GetAssetPath( Selection.activeObject) ) )
+                if (AssetDatabase.CanOpenForEdit(AssetDatabase.GetAssetPath(Selection.activeObject)))
                 {
-                    treeView.PopulateView( tree );
+                    treeView.PopulateView(tree);
                 }
             }
 
-            if ( tree != null )
+            if (tree != null)
             {
-                string treePath = AssetDatabase.GetAssetPath( tree );
-                if ( Application.isPlaying && string.IsNullOrEmpty( treePath ) )
+                string treePath = AssetDatabase.GetAssetPath(tree);
+                if (Application.isPlaying && string.IsNullOrEmpty(treePath))
                 {
                     blackboardProperty = tree.GetBlackboard();
                 }
@@ -160,14 +150,6 @@ namespace AI.Tree.Editor
                 {
                     blackboardProperty = tree.blackboardRef;
                 }
-            }
-        }
-
-        private void OnNodeSelectionChanged( NodeView node )
-        {
-            if ( node != null )
-            {
-                inspectorNodeView.UpdateSelection( (Object) node.node );
             }
         }
 

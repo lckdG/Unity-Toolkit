@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace AI.Tree
+namespace DevToolkit.AI
 {
     public class BehaviorTreeRunner : MonoBehaviour
     {
@@ -10,7 +10,7 @@ namespace AI.Tree
 #region Tree Setups
         void Awake()
         {
-            if ( cloneFrom != null )
+            if (cloneFrom != null)
             {
                 tree = cloneFrom.Clone();
             }
@@ -18,40 +18,34 @@ namespace AI.Tree
 
         void Start()
         {
-            if ( cloneFrom != null )
+            if (cloneFrom != null)
             {
                 tree = cloneFrom.Clone();
                 tree.Setup();
             }
         }
 
-        public void CloneFromTree( BehaviorTree tree )
+        public void CloneFromTree(BehaviorTree tree)
         {
             this.tree = tree.Clone();
             this.tree.Setup();
         }
 
-        public void SetBlackboardTarget( MonoBehaviour target )
+        public void SetBlackboardTarget(MonoBehaviour target)
         {
-            if ( tree )
-            {
-                tree.SetBlackboardTarget( target );
-            }
+            tree?.SetBlackboardTarget(target);
         }
 #endregion
 
-#region  Tree Manipulations
+#region Tree Manipulations
         public void UpdateTree()
         {
-            if ( tree != null )
-            {
-                tree.Update();
-            }
+            tree?.Update();
         }
 
-        public void SetBlackboardData( BlackboardObjectType type, string key, object data )
+        public void SetBlackboardData(BlackboardObjectType type, string key, object data)
         {
-            tree?.SetBlackBoardData( type, key, data );
+            tree?.SetBlackBoardData(type, key, data);
         }
 
         public void ResetTree()
@@ -66,6 +60,5 @@ namespace AI.Tree
             return tree;
         }
 #endif
-
     }
 }

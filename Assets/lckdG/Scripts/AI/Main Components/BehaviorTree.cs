@@ -5,13 +5,13 @@ using UnityEngine;
 
 #if UNITY_EDITOR
 using UnityEditor;
-using AI.Tree.Editor;
+using DevToolkit.AI.Editor;
 #endif
 
-namespace AI.Tree
+namespace DevToolkit.AI
 {
 
-    [CreateAssetMenu(menuName = "AI/Behavior Tree")]
+    [CreateAssetMenu(menuName = "DevToolkit/Behavior Tree", order = 201)]
     public class BehaviorTree : ScriptableObject
     {
         [ReadOnly] public Node root;
@@ -23,7 +23,7 @@ namespace AI.Tree
 
         public BehaviorTree Clone()
         {
-            BehaviorTree tree = Instantiate( this );
+            BehaviorTree tree = Instantiate(this);
             tree.root = this.root.Clone();
             tree.nodes = new List<Node>();
 
@@ -32,7 +32,7 @@ namespace AI.Tree
                 tree.blackboard = blackboardRef.Clone();
             }
 
-            Traverse( tree.root, n => tree.nodes.Add( n ) );
+            Traverse(tree.root, n => tree.nodes.Add(n));
 
             return tree;
         }
@@ -44,39 +44,39 @@ namespace AI.Tree
 
         private void BindBlackboard()
         {
-            Traverse( root, ( n ) => {
-                n.SetBlackboard ( blackboard );
+            Traverse(root, (n) => {
+                n.SetBlackboard(blackboard);
             });
         }
 
-        public void Traverse( Node node, Action<Node> visitor )
+        public void Traverse(Node node, Action<Node> visitor)
         {
-            if ( node )
+            if (node)
             {
-                visitor.Invoke( node );
-                var children = GetChildren( node );
-                children.ForEach( child => Traverse( child, visitor ) );
+                visitor.Invoke(node);
+                var children = GetChildren(node);
+                children.ForEach(child => Traverse(child, visitor));
             }
         }
 
-        public List<Node> GetChildren( Node parent )
+        public List<Node> GetChildren(Node parent)
         {
             List<Node> children = new List<Node>();
 
             Root root = parent as Root;
-            if ( root && root.child )
+            if (root && root.child)
             {
-                children.Add( root.child );
+                children.Add(root.child);
             }
 
             Decorator decorator = parent as Decorator;
-            if ( decorator && decorator.child != null)
+            if (decorator && decorator.child != null)
             {
-                children.Add( decorator.child );
+                children.Add(decorator.child);
             }
 
             Composite composite = parent as Composite;
-            if ( composite )
+            if (composite)
             {
                 return composite.children;
             }
@@ -86,24 +86,24 @@ namespace AI.Tree
 
         public void ResetState()
         {
-            if ( root == null ) return;
+            if (root == null) return;
             ResetStateVisitor resetVisitor = new ResetStateVisitor();
-            (root as Root).Accept( resetVisitor );
+            (root as Root).Accept(resetVisitor);
         }
 
-        public void SetBlackboardTarget( MonoBehaviour target )
+        public void SetBlackboardTarget(MonoBehaviour target)
         {
-            blackboard.SetTarget( target );
+            blackboard.SetTarget(target);
         }
 
-        public void SetBlackBoardData( BlackboardObjectType type, string key, object data )
+        public void SetBlackBoardData(BlackboardObjectType type, string key, object data)
         {
-            blackboard.SetOrAddData( type, key, data );
+            blackboard.SetOrAddData(type, key, data);
         }
 
         public State Update()
         {
-            if ( root.state == State.EXECUTING )
+            if (root.state == State.EXECUTING)
             {
                 treeState = root.Update();
             }
@@ -116,30 +116,35 @@ namespace AI.Tree
 #region Blackboard Handling
         void Awake()
         {
-            if ( AssetDatabase.IsAssetImportWorkerProcess() ) return;
+            if (AssetDatabase.IsAssetImportWorkerProcess()) return;
 
-            string assetPath = AssetDatabase.GetAssetPath( this );
-            if ( string.IsNullOrEmpty( assetPath ) )
+            string assetPath = AssetDatabase.GetAssetPath(this);
+            if (string.IsNullOrEmpty(assetPath))
             {
-                BehaviorTreeEditorUtility.RegisterAssetPostprocessCallback( OnAssetPostProcessed );
+                BehaviorTreeEditorUtility.RegisterAssetPostprocessCallback(OnAssetPostProcessed);
                 return;
             }
 
-            OnAssetPostProcessed( );
+            OnAssetPostProcessed();
         }
         
-        void OnAssetPostProcessed()
+        async void OnAssetPostProcessed()
         {
-            BehaviorTreeEditorUtility.UnregisterAssetPostprocessCallback( OnAssetPostProcessed );
+            BehaviorTreeEditorUtility.UnregisterAssetPostprocessCallback(OnAssetPostProcessed);
 
-            string assetPath = AssetDatabase.GetAssetPath( this );
-            if ( string.IsNullOrEmpty( assetPath ) || HasBlackboard() ) return;
+            string assetPath = AssetDatabase.GetAssetPath(this);
+            if (string.IsNullOrEmpty(assetPath)) return;
 
-            BehaviorTreeEditorUtility.UpdateBlackboard( this );
+            Selection.activeObject = null;
+
+            await BehaviorTreeEditorUtility.CreateRoot(this);
+            await BehaviorTreeEditorUtility.UpdateBlackboard(this);
+
+            Selection.activeObject = this;
         }
 
         public bool HasBlackboard() => blackboardRef != null;
-        public void AssignBlackboard( Blackboard blackboard )
+        public void AssignBlackboard(Blackboard blackboard)
         {
             blackboardRef = blackboard;
         }
@@ -149,89 +154,86 @@ namespace AI.Tree
 #endregion
 
 #region Node Handling
-        public Node CreateNode( Type type )
+        public Node CreateNode(Type type)
         {
-            Node node = CreateInstance( type ) as Node;
+            Node node = CreateInstance(type) as Node;
             node.name = type.Name;
             node.guid = GUID.Generate().ToString();
 
-            Undo.RecordObject( this, "Behaviour Tree (CreateNode)");
-            nodes.Add( node );
+            Undo.RecordObject(this, "Behaviour Tree (CreateNode)");
+            nodes.Add(node);
 
-            if ( !Application.isPlaying )
+            if (Application.isPlaying == false)
             {
-                AssetDatabase.AddObjectToAsset( node, this );
+                AssetDatabase.AddObjectToAsset(node, this);
             }
 
-            Undo.RegisterCreatedObjectUndo( node, "Behaviour Tree (CreateNode)");
-
+            Undo.RegisterCreatedObjectUndo(node, "Behaviour Tree (CreateNode)");
             AssetDatabase.SaveAssets();
 
             return node;
         }
 
-        public void DeleteNode( Node node )
+        public void DeleteNode(Node node)
         {
-            Undo.RecordObject( this, "Behaviour Tree (DeleteNode)");
+            Undo.RecordObject(this, "Behaviour Tree (DeleteNode)");
+            nodes.Remove(node);
 
-            nodes.Remove( node );
-
-            // AssetDatabase.RemoveObjectFromAsset( node );
             Undo.DestroyObjectImmediate(node);
             AssetDatabase.SaveAssets();
         }
 
-        public void AddChild( Node parent, Node child )
+        public void AddChild(Node parent, Node child)
         {
             Root root = parent as Root;
-            if ( root )
+            if (root)
             {
-                Undo.RecordObject( root, "Behaviour Tree (AddChild)");
+                Undo.RecordObject(root, "Behaviour Tree (AddChild)");
                 root.child = child;
-                EditorUtility.SetDirty( root );
+                EditorUtility.SetDirty(root);
             }
 
             Decorator decorator = parent as Decorator;
-            if ( decorator )
+            if (decorator)
             {
-                Undo.RecordObject( decorator, "Behaviour Tree (AddChild)");
+                Undo.RecordObject(decorator, "Behaviour Tree (AddChild)");
                 decorator.child = child;
-                EditorUtility.SetDirty( decorator );
+                EditorUtility.SetDirty(decorator);
             }
 
             Composite composite = parent as Composite;
-            if ( composite )
+            if (composite)
             {
-                Undo.RecordObject( composite, "Behaviour Tree (AddChild)");
-                composite.children.Add( child );
-                EditorUtility.SetDirty( composite );
+                Undo.RecordObject(composite, "Behaviour Tree (AddChild)");
+                composite.children.Add(child);
+                EditorUtility.SetDirty(composite);
             }
         }
 
-        public void RemoveChild( Node parent, Node child )
+        public void RemoveChild(Node parent, Node child)
         {
             Root root = parent as Root;
-            if ( root )
+            if (root)
             {
-                Undo.RecordObject( root, "Behaviour Tree (RemoveChild)");
+                Undo.RecordObject(root, "Behaviour Tree (RemoveChild)");
                 root.child = null;
-                EditorUtility.SetDirty( root );
+                EditorUtility.SetDirty(root);
             }
 
             Decorator decorator = parent as Decorator;
-            if ( decorator )
+            if (decorator)
             {
-                Undo.RecordObject( decorator, "Behaviour Tree (RemoveChild)");
+                Undo.RecordObject(decorator, "Behaviour Tree (RemoveChild)");
                 decorator.child = null;
-                EditorUtility.SetDirty( decorator );
+                EditorUtility.SetDirty(decorator);
             }
 
             Composite composite = parent as Composite;
-            if ( composite )
+            if (composite)
             {
-                Undo.RecordObject( composite, "Behaviour Tree (RemoveChild)");
-                composite.children.Remove( child );
-                EditorUtility.SetDirty( composite );
+                Undo.RecordObject(composite, "Behaviour Tree (RemoveChild)");
+                composite.children.Remove(child);
+                EditorUtility.SetDirty(composite);
             }
         }
 #endregion

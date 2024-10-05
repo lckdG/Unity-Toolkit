@@ -1,23 +1,23 @@
-namespace AI.Tree
+namespace DevToolkit.AI
 {
     public class ResetStateVisitor : INodeVisitor
     {
-        public void Visit( Root root )
+        public void Visit(Root root)
         {
             root.Reset();
         }
 
-        public void Visit( Decorator decorator )
+        public void Visit(Decorator decorator)
         {
             decorator.Reset();
         }
 
-        public void Visit( Composite composite )
+        public void Visit(Composite composite)
         {
             composite.Reset();
         }
 
-        public void Visit( Action action )
+        public void Visit(Action action)
         {
             action.Reset();
         }

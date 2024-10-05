@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace AI.Tree
+namespace DevToolkit.AI
 {
     public class SimpleParallel : Composite
     {
@@ -14,7 +14,7 @@ namespace AI.Tree
 
         protected override void OnStop()
         {
-            foreach ( Node child in children )
+            foreach (Node child in children)
             {
                 child.Reset();
             }
@@ -25,37 +25,37 @@ namespace AI.Tree
             Node mainAction = children[0];
             Node subAction = children[1];
 
-            if ( finishMode == FinishMode.IMMEDIATE )
+            if (finishMode == FinishMode.IMMEDIATE)
             {
-                state = ExecuteNode( mainAction );
-                if ( IsExecuting() && subAction.IsExecuting() )
+                state = ExecuteNode(mainAction);
+                if (IsExecuting() && subAction.IsExecuting())
                 {
-                    ExecuteNode( subAction );
+                    ExecuteNode(subAction);
                 }
 
-                if ( !IsExecuting() )
+                if (IsExecuting() == false)
                 {
                     ResetStateVisitor resetStateVisitor = new ResetStateVisitor();
                     
                     IVisitee vistee = subAction as IVisitee;
-                    if ( vistee != null ) vistee.Accept( resetStateVisitor );
+                    vistee?.Accept(resetStateVisitor);
                 }
 
                 return state;
             }
             else
             {
-                if ( mainAction.IsExecuting() )
+                if (mainAction.IsExecuting())
                 {
-                    ExecuteNode( mainAction );
+                    ExecuteNode(mainAction);
                 }
 
-                if ( subAction.IsExecuting() )
+                if (subAction.IsExecuting())
                 {
-                    ExecuteNode( subAction );
+                    ExecuteNode(subAction);
                 }
 
-                if ( !mainAction.IsExecuting() && !subAction.IsExecuting() )
+                if (mainAction.IsExecuting() == false && subAction.IsExecuting() == false)
                 {
                     state = State.SUCCESS;
                 }
@@ -68,7 +68,7 @@ namespace AI.Tree
             }
         }
 
-        private State ExecuteNode( Node node )
+        private State ExecuteNode(Node node)
         {
             State state = node.Update();
             return state;

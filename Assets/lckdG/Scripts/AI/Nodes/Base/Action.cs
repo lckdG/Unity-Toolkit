@@ -1,10 +1,10 @@
-namespace AI.Tree
+namespace DevToolkit.AI
 {
     public abstract class Action : Node, IVisitee
     {
-        public void Accept( INodeVisitor visitor )
+        public void Accept(INodeVisitor visitor)
         {
-            visitor.Visit( this );
+            visitor.Visit(this);
         }
     }
 
