@@ -35,7 +35,6 @@ namespace AI.Tree.Editor
         
         private static string _editorPath = "";
         private BehaviorTreeView treeView;
-        private InspectorView inspectorNodeView;
         private InspectorView inspectorBlackboardView;
         Blackboard blackboardProperty;
 
@@ -49,7 +48,7 @@ namespace AI.Tree.Editor
         [OnOpenAsset]
         public static bool OnOpenAsset(int instanceId, int line)
         {
-            if ( Selection.activeObject is BehaviorTree )
+            if (Selection.activeObject is BehaviorTree)
             {
                 OpenWindow();
                 return true;
@@ -73,15 +72,7 @@ namespace AI.Tree.Editor
             root.styleSheets.Add(styleSheet);
 
             treeView = root.Q<BehaviorTreeView>();
-
-            SplitView splitView = root.Q<SplitView>();
-            splitView.fixedPaneIndex = 1;
-            splitView.fixedPaneInitialDimension = 300;
-
-            inspectorNodeView = root.Query<InspectorView>("node-inspector");
             inspectorBlackboardView = root.Q<InspectorView>("blackboard-inspector");
-
-            treeView.OnNodeSelected = OnNodeSelectionChanged;
 
             OnSelectionChange();
 
@@ -130,7 +121,7 @@ namespace AI.Tree.Editor
                     if (runner)
                     {
                         tree = runner.GetTree();
-                    } 
+                    }
                 }
             }
 
@@ -160,14 +151,6 @@ namespace AI.Tree.Editor
                 {
                     blackboardProperty = tree.blackboardRef;
                 }
-            }
-        }
-
-        private void OnNodeSelectionChanged(NodeView node)
-        {
-            if (node != null)
-            {
-                inspectorNodeView.UpdateSelection(node.node);
             }
         }
 

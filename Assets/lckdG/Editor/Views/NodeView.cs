@@ -19,7 +19,7 @@ namespace AI.Tree.Editor
         public Port output;
         public Port subOutput;
 
-        public NodeView( Node node ) : base(BehaviorTreeEditor.editorPath + "Visuals\\NodeView.uxml")
+        public NodeView(Node node) : base(BehaviorTreeEditor.editorPath + "Visuals\\NodeView.uxml")
         {
             this.node = node;
             this.title = node.name;
@@ -36,79 +36,68 @@ namespace AI.Tree.Editor
 
         private void SetUpClass()
         {
-            if ( node is Action )
+            if (node is Action)
             {
                 AddToClassList("action");
             }
-            else if ( node is Composite )
+            else if (node is Composite)
             {
                 AddToClassList("composite");
             }
-            else if ( node is Decorator )
+            else if (node is Decorator)
             {
                 AddToClassList("decorator");
             }
-            else if ( node is Root )
+            else if (node is Root)
             {
                 AddToClassList("root");
             }
-
         }
 
         private void CreateInputPorts()
         {
-            if ( node is Action )
+            if (node is Action || node is Composite || node is Decorator)
             {
-                input = InstantiatePort( Orientation.Vertical, Direction.Input, Port.Capacity.Single, typeof(bool) );
+                input = InstantiatePort(Orientation.Vertical, Direction.Input, Port.Capacity.Single, typeof(bool));
             }
-            else if ( node is Composite )
-            {
-                input = InstantiatePort( Orientation.Vertical, Direction.Input, Port.Capacity.Single, typeof(bool) );
-            }
-            else if ( node is Decorator )
-            {
-                input = InstantiatePort( Orientation.Vertical, Direction.Input, Port.Capacity.Single, typeof(bool) );
-            }
-            else if ( node is Root )
-            { }
 
-            if ( input != null )
+            if (input != null)
             {
                 input.portName = "";
                 input.style.flexDirection = FlexDirection.Column;
-                inputContainer.Add( input );
+                inputContainer.Add(input);
             }
         }
 
         private void CreateOutputPorts()
         {
-            if ( node is Action ) { }
-            else if ( node is SimpleParallel )
+            if (node is Action) { }
+            else if (node is SimpleParallel)
             {
-                output = InstantiatePort( Orientation.Vertical, Direction.Output, Port.Capacity.Single, typeof(bool) );
-                subOutput = InstantiatePort( Orientation.Vertical, Direction.Output, Port.Capacity.Single, typeof(bool) );
+                output = InstantiatePort(Orientation.Vertical, Direction.Output, Port.Capacity.Single, typeof(bool));
+                subOutput = InstantiatePort(Orientation.Vertical, Direction.Output, Port.Capacity.Single, typeof(bool));
             }
-            else if ( node is Composite )
+            else if (node is Composite)
             {
-                output = InstantiatePort( Orientation.Vertical, Direction.Output, Port.Capacity.Multi, typeof(bool) );
+                output = InstantiatePort(Orientation.Vertical, Direction.Output, Port.Capacity.Multi, typeof(bool));
             }
-            else if ( node is Decorator || node is Root )
+            else if (node is Decorator || node is Root)
             {
-                output = InstantiatePort( Orientation.Vertical, Direction.Output, Port.Capacity.Single, typeof(bool) );
+                output = InstantiatePort(Orientation.Vertical, Direction.Output, Port.Capacity.Single, typeof(bool));
             }
 
-            if ( output != null )
+            if (output != null)
             {
                 output.portName = "";
                 output.style.flexDirection = FlexDirection.ColumnReverse;
-                outputContainer.Add( output );
+                outputContainer.Add(output);
             }
 
-            if ( subOutput != null )
+            if (subOutput != null)
             {
                 subOutput.portName = "";
                 subOutput.style.flexDirection = FlexDirection.ColumnReverse;
-                outputContainer.Add( subOutput );
+                outputContainer.Add(subOutput);
             }
         }
 
@@ -116,53 +105,50 @@ namespace AI.Tree.Editor
         {
             base.SetPosition(newPos);
 
-            Undo.RecordObject( node, "Behaviour Tree (Set Position)");
+            Undo.RecordObject(node, "Behaviour Tree (Set Position)");
 
             node.position.x = newPos.xMin;
             node.position.y = newPos.yMin;
 
-            EditorUtility.SetDirty( node );
+            EditorUtility.SetDirty(node);
         }
 
         public override void OnSelected()
         {
             base.OnSelected();
-
-            if ( OnNodeSelected != null )
-            {
-                OnNodeSelected.Invoke( this );
-            }
+            OnNodeSelected?.Invoke(this);
         }
 
         public void SortChildren()
         {
             Composite composite = node as Composite;
-            if ( composite )
+            if (composite)
             {
-                composite.children.Sort( SortByHorizontalPosition );
+                composite.children.Sort(SortByHorizontalPosition);
             }
         }
 
-        private int SortByHorizontalPosition( Node left, Node right )
+        private int SortByHorizontalPosition(Node left, Node right)
         {
             return left.position.x < right.position.x ? -1 : 1;
         }
 
         public void UpdateState()
         {
-            RemoveFromClassList( "executing" );
-            RemoveFromClassList( "failed" );
-            RemoveFromClassList( "success" );
+            RemoveFromClassList("executing");
+            RemoveFromClassList("failed");
+            RemoveFromClassList("success");
 
-            if ( !Application.isPlaying ) return;
+            if (Application.isPlaying == false) return;
         
-            switch( node.state )
+            switch(node.state)
             {
                 case State.EXECUTING:
-                    if ( node.started )
+                    if (node.started)
                     {
                         AddToClassList("executing");
                     }
+
                     break;
 
                 case State.FAILED:

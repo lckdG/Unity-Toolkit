@@ -29,7 +29,7 @@ namespace AI.Tree.Editor
         private void InspectBlackboardEditorMode()
         {
             SerializedProperty context = serializedObject.FindProperty("keyMappingList");
-            InitFoldout( context.arraySize );
+            InitFoldout(context.arraySize);
 
             void InsertElementToContext()
             {
