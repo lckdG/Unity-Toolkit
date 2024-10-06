@@ -71,6 +71,8 @@ namespace DevToolkit.AI.Editor
             root.styleSheets.Add(styleSheet);
 
             treeView = root.Q<BehaviorTreeView>();
+            treeView.OnDroppedTree = OnDroppedTree;
+
             inspectorBlackboardView = root.Q<InspectorView>("blackboard-inspector");
 
             OnSelectionChange();
@@ -156,6 +158,15 @@ namespace DevToolkit.AI.Editor
         private void OnInspectorUpdate()
         {
             treeView?.UpdateNodeState();
+        }
+
+        private void OnDroppedTree(BehaviorTree tree)
+        {
+            if (treeView.GetCurrentTree() == null)
+            {
+                Selection.activeObject = tree;
+                OnSelectionChange();
+            }
         }
     }
 }

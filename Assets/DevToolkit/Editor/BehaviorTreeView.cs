@@ -15,6 +15,8 @@ namespace DevToolkit.AI.Editor
     {
         public new class UxmlFactory : UxmlFactory<BehaviorTreeView, GraphView.UxmlTraits> { }
 
+        public Action<BehaviorTree> OnDroppedTree;
+
         private BehaviorTree tree;
         public BehaviorTreeView()
         {
@@ -24,6 +26,7 @@ namespace DevToolkit.AI.Editor
             this.AddManipulator(new ContentDragger());
             this.AddManipulator(new SelectionDragger());
             this.AddManipulator(new RectangleSelector());
+            this.AddManipulator(new TreeDragAndDrop(this));
 
             var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(BehaviorTreeEditor.editorPath + "Visuals\\BehaviorTreeEditor.uss");
             styleSheets.Add(styleSheet);
@@ -172,9 +175,11 @@ namespace DevToolkit.AI.Editor
             });
         }
 
-        private void OnMouseUp(MouseUpEvent evt)
+        internal BehaviorTree GetCurrentTree() => tree;
+
+        internal void DropTree(BehaviorTree tree)
         {
-            Debug.Log(evt);
+            OnDroppedTree?.Invoke(tree);
         }
     }
 }
