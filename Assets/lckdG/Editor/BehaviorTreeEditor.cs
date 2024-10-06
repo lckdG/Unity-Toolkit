@@ -8,7 +8,7 @@ using UnityEditor.Callbacks;
 
 namespace DevToolkit.AI.Editor
 {
-    public class BehaviorTreeEditor : EditorWindow
+    internal class BehaviorTreeEditor : EditorWindow
     {
         public static string editorPath { 
             get {

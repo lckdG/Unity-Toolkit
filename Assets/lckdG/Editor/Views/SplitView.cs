@@ -4,7 +4,7 @@ using UnityEngine.UIElements;
 
 namespace DevToolkit.AI.Editor
 {
-    public class SplitView : TwoPaneSplitView
+    internal class SplitView : TwoPaneSplitView
     {
         public new class UxmlFactory : UxmlFactory<SplitView, TwoPaneSplitView.UxmlTraits> { }
         

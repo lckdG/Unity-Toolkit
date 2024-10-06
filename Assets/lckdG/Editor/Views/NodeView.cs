@@ -6,11 +6,10 @@ using UnityEngine;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine.UIElements;
-using UnityEngine.EventSystems;
 
 namespace DevToolkit.AI.Editor
 {
-    public class NodeView : UnityEditor.Experimental.GraphView.Node
+    internal class NodeView : UnityEditor.Experimental.GraphView.Node
     {
         public Action<NodeView> OnNodeSelected;
         public Node node;

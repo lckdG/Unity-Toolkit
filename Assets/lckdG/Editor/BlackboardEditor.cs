@@ -7,7 +7,7 @@ using UnityEditor;
 namespace DevToolkit.AI.Editor
 {
     [CustomEditor(typeof(Blackboard), true)]
-    public class BlackboardEditor : UnityEditor.Editor
+    internal class BlackboardEditor : UnityEditor.Editor
     {
         private int contextSize = 0;
         private List<bool> foldouts = new List<bool>();

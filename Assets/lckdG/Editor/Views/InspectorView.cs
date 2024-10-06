@@ -4,7 +4,7 @@ using UnityEngine.UIElements;
 
 namespace DevToolkit.AI.Editor
 {
-    public class InspectorView : VisualElement
+    internal class InspectorView : VisualElement
     {
         public new class UxmlFactory : UxmlFactory<InspectorView, VisualElement.UxmlTraits> { }
 

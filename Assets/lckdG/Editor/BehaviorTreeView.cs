@@ -4,13 +4,14 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 
+using UnityEngine;
 using UnityEditor;
 using UnityEngine.UIElements;
 using UnityEditor.Experimental.GraphView;
 
 namespace DevToolkit.AI.Editor
 {
-    public class BehaviorTreeView : GraphView
+    internal class BehaviorTreeView : GraphView
     {
         public new class UxmlFactory : UxmlFactory<BehaviorTreeView, GraphView.UxmlTraits> { }
 
@@ -169,6 +170,11 @@ namespace DevToolkit.AI.Editor
                 NodeView view = n as NodeView;
                 view.UpdateState();
             });
+        }
+
+        private void OnMouseUp(MouseUpEvent evt)
+        {
+            Debug.Log(evt);
         }
     }
 }
