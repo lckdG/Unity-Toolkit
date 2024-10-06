@@ -103,10 +103,17 @@ namespace DevToolkit.AI.Editor
 
         private GraphViewChange OnGraphViewChanged(GraphViewChange graphViewChange)
         {
+            bool removedSubTreeNode = false;
+
             graphViewChange.elementsToRemove?.ForEach(element => {
                 NodeView nodeView = element as NodeView;
                 if (nodeView != null)
                 {
+                    if (nodeView.node is SubTree)
+                    {
+                        removedSubTreeNode = true;
+                    }
+
                     tree.DeleteNode(nodeView.node);
                 }
 
@@ -133,6 +140,11 @@ namespace DevToolkit.AI.Editor
                     NodeView view = n as NodeView;
                     view.SortChildren();
                 });
+            }
+
+            if (removedSubTreeNode)
+            {
+                PopulateView(tree);
             }
 
             return graphViewChange;
@@ -216,6 +228,7 @@ namespace DevToolkit.AI.Editor
         public void AppendSubTree(BehaviorTree subTree, Vector2 mousePosition)
         {
             tree.AppendSubTree(subTree, mousePosition);
+            PopulateView(tree);
         }
 
         private void PopulateSubTree(SubTree subTreeNode)

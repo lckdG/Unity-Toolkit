@@ -4,7 +4,7 @@ namespace DevToolkit.AI
 {
     public class SubTree : Decorator
     {
-        [SerializeField] public BehaviorTree Tree
+        public BehaviorTree Tree
         {
             get { return _tree; }
             set {
@@ -13,7 +13,7 @@ namespace DevToolkit.AI
             }
         }
 
-        private BehaviorTree _tree;
+        [ReadOnly] [SerializeField] private BehaviorTree _tree;
 
         protected override void OnStart() { }
 
@@ -32,7 +32,7 @@ namespace DevToolkit.AI
                 this.child = null;
                 return;
             }
-            
+
             this.child = _tree.root;
         }
     }
