@@ -31,6 +31,7 @@ namespace DevToolkit.AI.Editor
 
             Root root = ScriptableObject.CreateInstance<Root>();
             root.name = "Root";
+            root.guid = GUID.Generate().ToString();
 
             AssetDatabase.AddObjectToAsset(root, tree);
             AssetDatabase.SaveAssets();
