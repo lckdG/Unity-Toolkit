@@ -57,7 +57,7 @@ namespace DevToolkit.AI.Editor
 
             if (subTree)
             {
-                capabilities = 0;
+                capabilities = Capabilities.Selectable;
             }
         }
 
