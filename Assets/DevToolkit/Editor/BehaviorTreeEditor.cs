@@ -128,14 +128,11 @@ namespace DevToolkit.AI.Editor
 
             if (Application.isPlaying)
             {
-                if (treeView != null)
-                {
-                    treeView.PopulateView(tree);
-                }
+                treeView?.PopulateView(tree);
             }
             else
             {
-                if (AssetDatabase.CanOpenForEdit(AssetDatabase.GetAssetPath(Selection.activeObject)))
+                if (tree != null && AssetDatabase.CanOpenForEdit(AssetDatabase.GetAssetPath(tree)))
                 {
                     treeView.PopulateView(tree);
                 }

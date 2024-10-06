@@ -32,6 +32,30 @@ namespace DevToolkit.AI.Editor
             styleSheets.Add(styleSheet);
 
             Undo.undoRedoPerformed += OnUndoRedo;
+
+            BehaviorTreeEditorUtility.RegisterAssetPostprocessCallback(OnAssetPostProcessed);
+        }
+
+        ~BehaviorTreeView()
+        {
+            BehaviorTreeEditorUtility.UnregisterAssetPostprocessCallback(OnAssetPostProcessed);
+        }
+
+        private void OnAssetPostProcessed()
+        {
+            if (this.tree == null)
+            {
+                DeleteOldTree();
+            }
+        }
+
+        private void DeleteOldTree()
+        {
+            graphViewChanged -= OnGraphViewChanged;
+            DeleteElements(graphElements.ToList());
+
+            if (this.tree == null) return;
+            graphViewChanged += OnGraphViewChanged;
         }
 
         private NodeView FindNodeView(Node node)
@@ -42,12 +66,7 @@ namespace DevToolkit.AI.Editor
         internal void PopulateView(BehaviorTree tree)
         {
             this.tree = tree;
-
-            graphViewChanged -= OnGraphViewChanged;
-            DeleteElements(graphElements.ToList());
-
-            if (tree == null) return;
-            graphViewChanged += OnGraphViewChanged;
+            DeleteOldTree();
 
             tree.nodes.ForEach(n => CreateNodeView(n));
             tree.nodes.ForEach(n => {
@@ -78,6 +97,43 @@ namespace DevToolkit.AI.Editor
                     });
                 }
             });
+        }
+
+        private GraphViewChange OnGraphViewChanged(GraphViewChange graphViewChange)
+        {
+            graphViewChange.elementsToRemove?.ForEach(element => {
+                NodeView nodeView = element as NodeView;
+                if (nodeView != null)
+                {
+                    tree.DeleteNode(nodeView.node);
+                }
+
+                Edge edge = element as Edge;
+                if (edge != null)
+                {
+                    NodeView parentView = edge.output.node as NodeView;
+                    NodeView childView = edge.input.node as NodeView;
+
+                    tree.RemoveChild(parentView.node, childView.node);
+                }
+            });
+
+            graphViewChange.edgesToCreate?.ForEach(edge => {
+                NodeView parentView = edge.output.node as NodeView;
+                NodeView childView = edge.input.node as NodeView;
+
+                tree.AddChild(parentView.node, childView.node);
+            });
+
+            if (graphViewChange.movedElements != null)
+            {
+                nodes.ForEach(n => {
+                    NodeView view = n as NodeView;
+                    view.SortChildren();
+                });
+            }
+
+            return graphViewChange;
         }
 
         private void CreateNodeView(Node node)
@@ -117,43 +173,6 @@ namespace DevToolkit.AI.Editor
         {
             Node node = tree.CreateNode(type);
             CreateNodeView(node);
-        }
-
-        private GraphViewChange OnGraphViewChanged(GraphViewChange graphViewChange)
-        {
-            graphViewChange.elementsToRemove?.ForEach(element => {
-                NodeView nodeView = element as NodeView;
-                if (nodeView != null)
-                {
-                    tree.DeleteNode(nodeView.node);
-                }
-
-                Edge edge = element as Edge;
-                if (edge != null)
-                {
-                    NodeView parentView = edge.output.node as NodeView;
-                    NodeView childView = edge.input.node as NodeView;
-
-                    tree.RemoveChild(parentView.node, childView.node);
-                }
-            });
-
-            graphViewChange.edgesToCreate?.ForEach(edge => {
-                NodeView parentView = edge.output.node as NodeView;
-                NodeView childView = edge.input.node as NodeView;
-
-                tree.AddChild(parentView.node, childView.node);
-            });
-
-            if (graphViewChange.movedElements != null)
-            {
-                nodes.ForEach(n => {
-                    NodeView view = n as NodeView;
-                    view.SortChildren();
-                });
-            }
-
-            return graphViewChange;
         }
 
         public override List<Port> GetCompatiblePorts(Port startPort, NodeAdapter nodeAdapter)
