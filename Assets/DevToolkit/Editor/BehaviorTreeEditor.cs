@@ -41,7 +41,7 @@ namespace DevToolkit.AI.Editor
         public static void OpenWindow()
         {
             BehaviorTreeEditor wnd = GetWindow<BehaviorTreeEditor>();
-            wnd.titleContent = new GUIContent("BehaviorTreeEditor");
+            wnd.titleContent = new GUIContent("Behavior Tree Editor");
         }
 
         [OnOpenAsset]
@@ -157,12 +157,16 @@ namespace DevToolkit.AI.Editor
             treeView?.UpdateNodeState();
         }
 
-        private void OnDroppedTree(BehaviorTree tree)
+        private void OnDroppedTree(BehaviorTree tree, Vector2 mousePosition)
         {
             if (treeView.GetCurrentTree() == null)
             {
                 Selection.activeObject = tree;
                 OnSelectionChange();
+            }
+            else
+            {
+                treeView.AppendSubTree(tree, mousePosition);
             }
         }
     }

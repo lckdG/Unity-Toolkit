@@ -154,11 +154,13 @@ namespace DevToolkit.AI
 #endregion
 
 #region Node Handling
-        public Node CreateNode(Type type)
+        public Node CreateNode(Type type, Vector2 position)
         {
             Node node = CreateInstance(type) as Node;
             node.name = type.Name;
             node.guid = GUID.Generate().ToString();
+
+            node.position = position;
 
             Undo.RecordObject(this, "Behaviour Tree (CreateNode)");
             nodes.Add(node);
@@ -235,6 +237,14 @@ namespace DevToolkit.AI
                 composite.children.Remove(child);
                 EditorUtility.SetDirty(composite);
             }
+        }
+#endregion
+
+#region Sub-Tree Handling
+        public void AppendSubTree(BehaviorTree tree, Vector2 mousePosition)
+        {
+            SubTree subTree = (SubTree)CreateNode(typeof(SubTree), mousePosition);
+            subTree.Tree = tree;
         }
 #endregion
 

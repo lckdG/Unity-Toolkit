@@ -11,29 +11,31 @@ namespace DevToolkit.AI.Editor
 {
     internal class NodeView : UnityEditor.Experimental.GraphView.Node
     {
+        public static Vector2 SubTreeOffset = 125f * Vector2.up;
         public Action<NodeView> OnNodeSelected;
+        public Action<NodeView, Vector2> OnNodeMove;
         public Node node;
 
         public Port input;
         public Port output;
         public Port subOutput;
 
-        public NodeView(Node node) : base(BehaviorTreeEditor.editorPath + "Visuals\\NodeView.uxml")
+        public NodeView(Node node, Vector2 offset, bool subTree) : base(BehaviorTreeEditor.editorPath + "Visuals\\NodeView.uxml")
         {
             this.node = node;
             this.title = node.name;
             this.viewDataKey = node.guid;
 
-            style.left = node.position.x;
-            style.top = node.position.y;
+            style.left = node.position.x + offset.x;
+            style.top = node.position.y + offset.y;
 
-            SetUpClass();
+            SetUpClass(subTree);
 
-            CreateInputPorts();
-            CreateOutputPorts();
+            CreateInputPorts(subTree);
+            CreateOutputPorts(subTree);
         }
 
-        private void SetUpClass()
+        private void SetUpClass(bool subTree)
         {
             if (node is Action)
             {
@@ -52,11 +54,16 @@ namespace DevToolkit.AI.Editor
                 AddToClassList("root");
                 capabilities ^= Capabilities.Movable ^ Capabilities.Deletable;
             }
+
+            if (subTree)
+            {
+                capabilities = 0;
+            }
         }
 
-        private void CreateInputPorts()
+        private void CreateInputPorts(bool subTree)
         {
-            if (node is Action || node is Composite || node is Decorator)
+            if ((node is Root && subTree) || node is Action || node is Composite || node is Decorator)
             {
                 input = InstantiatePort(Orientation.Vertical, Direction.Input, Port.Capacity.Single, typeof(bool));
             }
@@ -66,10 +73,12 @@ namespace DevToolkit.AI.Editor
                 input.portName = "";
                 input.style.flexDirection = FlexDirection.Column;
                 inputContainer.Add(input);
+
+                input.SetEnabled(subTree == false);
             }
         }
 
-        private void CreateOutputPorts()
+        private void CreateOutputPorts(bool subTree)
         {
             if (node is Action) { }
             else if (node is SimpleParallel)
@@ -91,6 +100,8 @@ namespace DevToolkit.AI.Editor
                 output.portName = "";
                 output.style.flexDirection = FlexDirection.ColumnReverse;
                 outputContainer.Add(output);
+
+                output.SetEnabled(subTree == false);
             }
 
             if (subOutput != null)
@@ -98,6 +109,8 @@ namespace DevToolkit.AI.Editor
                 subOutput.portName = "";
                 subOutput.style.flexDirection = FlexDirection.ColumnReverse;
                 outputContainer.Add(subOutput);
+
+                subOutput.SetEnabled(subTree == false);
             }
         }
 
@@ -110,7 +123,15 @@ namespace DevToolkit.AI.Editor
             node.position.x = newPos.xMin;
             node.position.y = newPos.yMin;
 
+            OnNodeMove?.Invoke(this, node.position);
+
             EditorUtility.SetDirty(node);
+        }
+
+        public void SetOffsetPosition(Vector2 offset)
+        {
+            style.left = node.position.x + offset.x;
+            style.top = node.position.y + offset.y;
         }
 
         public override void OnSelected()

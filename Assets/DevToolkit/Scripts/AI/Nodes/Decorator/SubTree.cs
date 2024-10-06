@@ -1,12 +1,19 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace DevToolkit.AI
 {
     public class SubTree : Decorator
     {
-        [SerializeField] private BehaviorTree subTree;
+        [SerializeField] public BehaviorTree Tree
+        {
+            get { return _tree; }
+            set {
+                _tree = value;
+                OnUpdateSubTree();
+            }
+        }
+
+        private BehaviorTree _tree;
 
         protected override void OnStart() { }
 
@@ -14,7 +21,19 @@ namespace DevToolkit.AI
 
         protected override State OnUpdate()
         {
-            return subTree.Update();
+            if (Tree == null) return State.FAILED;
+            return Tree.Update();
+        }
+
+        private void OnUpdateSubTree()
+        {
+            if (_tree == null)
+            {
+                this.child = null;
+                return;
+            }
+            
+            this.child = _tree.root;
         }
     }
 }

@@ -64,7 +64,7 @@ namespace DevToolkit.AI.Editor
 
             if (tree != null)
             {
-                view.DropTree(tree);
+                view.DropTree(tree, evt.mousePosition);
             }
         }
     }

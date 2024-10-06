@@ -15,7 +15,7 @@ namespace DevToolkit.AI.Editor
     {
         public new class UxmlFactory : UxmlFactory<BehaviorTreeView, GraphView.UxmlTraits> { }
 
-        public Action<BehaviorTree> OnDroppedTree;
+        public Action<BehaviorTree, Vector2> OnDroppedTree;
 
         private BehaviorTree tree;
         public BehaviorTreeView()
@@ -68,7 +68,9 @@ namespace DevToolkit.AI.Editor
             this.tree = tree;
             DeleteOldTree();
 
-            tree.nodes.ForEach(n => CreateNodeView(n));
+            Vector2 offsetZero = Vector2.zero;
+
+            tree.nodes.ForEach(n => CreateNodeView(n, offsetZero));
             tree.nodes.ForEach(n => {
                 NodeView parentView = FindNodeView(n);
 
@@ -136,19 +138,28 @@ namespace DevToolkit.AI.Editor
             return graphViewChange;
         }
 
-        private void CreateNodeView(Node node)
+        private void CreateNodeView(Node node, Vector2 offset, bool subTree = false)
         {
-            NodeView nodeView = new NodeView(node);
+            NodeView nodeView = new NodeView(node, offset, subTree);
             AddElement(nodeView);
+
+            SubTree subTreeNode = node as SubTree;
+            if (subTreeNode)
+            {
+                nodeView.OnNodeMove = OnMoveSubtree;
+                PopulateSubTree(subTreeNode);
+            }
         }
 
         public override void BuildContextualMenu(ContextualMenuPopulateEvent evt)
         {
+            Vector2 createPosition = evt.mousePosition;
+
             {
                 var types = TypeCache.GetTypesDerivedFrom<Composite>();
                 foreach(var type in types)
                 {
-                    evt.menu.AppendAction($"[{type.BaseType.Name}] - {type.Name}", (_) => CreateNode(type));
+                    evt.menu.AppendAction($"[{type.BaseType.Name}] - {type.Name}", (_) => CreateNode(type, createPosition));
                 }
             }
 
@@ -156,7 +167,7 @@ namespace DevToolkit.AI.Editor
                 var types = TypeCache.GetTypesDerivedFrom<Decorator>();
                 foreach(var type in types)
                 {
-                    evt.menu.AppendAction($"[{type.BaseType.Name}] - {type.Name}", (_) => CreateNode(type));
+                    evt.menu.AppendAction($"[{type.BaseType.Name}] - {type.Name}", (_) => CreateNode(type, createPosition));
                 }
             }
 
@@ -164,15 +175,15 @@ namespace DevToolkit.AI.Editor
                 var types = TypeCache.GetTypesDerivedFrom<Action>();
                 foreach(var type in types)
                 {
-                    evt.menu.AppendAction($"[{type.BaseType.Name}] - {type.Name}", (_) => CreateNode(type));
+                    evt.menu.AppendAction($"[{type.BaseType.Name}] - {type.Name}", (_) => CreateNode(type, createPosition));
                 }
             }
         }
 
-        private void CreateNode(System.Type type)
+        private void CreateNode(System.Type type, Vector2 nodePosition)
         {
-            Node node = tree.CreateNode(type);
-            CreateNodeView(node);
+            Node node = tree.CreateNode(type, nodePosition);
+            CreateNodeView(node, Vector2.zero);
         }
 
         public override List<Port> GetCompatiblePorts(Port startPort, NodeAdapter nodeAdapter)
@@ -196,10 +207,52 @@ namespace DevToolkit.AI.Editor
 
         internal BehaviorTree GetCurrentTree() => tree;
 
-        internal void DropTree(BehaviorTree tree)
+#region Sub-Tree Manipulation
+        internal void DropTree(BehaviorTree tree, Vector2 mousePosition)
         {
-            OnDroppedTree?.Invoke(tree);
+            OnDroppedTree?.Invoke(tree, mousePosition);
         }
+
+        public void AppendSubTree(BehaviorTree subTree, Vector2 mousePosition)
+        {
+            tree.AppendSubTree(subTree, mousePosition);
+        }
+
+        private void PopulateSubTree(SubTree subTreeNode)
+        {
+            BehaviorTree tree = subTreeNode.Tree;
+            if (tree == null) return;
+
+            Vector2 offsetPosition = subTreeNode.position + NodeView.SubTreeOffset;
+            foreach (var node in tree.nodes)
+            {
+                CreateNodeView(node, offsetPosition, subTree: true);
+            }
+
+            tree.nodes.ForEach(n => {
+                NodeView parentView = FindNodeView(n);
+                var children = tree.GetChildren(n);
+
+                children.ForEach(c => {
+                    NodeView childView = FindNodeView(c);
+
+                    Edge edge = parentView.output.ConnectTo(childView.input);
+                    AddElement(edge);
+                });
+            });
+        }
+
+        private void OnMoveSubtree(NodeView nodeView, Vector2 newPosition)
+        {
+            SubTree subTreeNode = nodeView.node as SubTree;
+            if (subTreeNode == null || subTreeNode.Tree == null) return;
+
+            subTreeNode.Tree.nodes.ForEach(n => {
+                NodeView nodeView = FindNodeView(n);
+                nodeView.SetOffsetPosition(newPosition + NodeView.SubTreeOffset);
+            });
+        }
+#endregion
     }
 }
 #endif
