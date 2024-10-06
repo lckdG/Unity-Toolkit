@@ -101,7 +101,7 @@ namespace DevToolkit.AI.Editor
                 output.style.flexDirection = FlexDirection.ColumnReverse;
                 outputContainer.Add(output);
 
-                output.SetEnabled(subTree == false);
+                output.SetEnabled(subTree == false && (node is SubTree) == false);
             }
 
             if (subOutput != null)
